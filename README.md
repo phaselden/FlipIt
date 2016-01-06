@@ -1,5 +1,5 @@
 # FlipIt
-Flip Clock Screensaver
+Flip Clock Screensaver. Inspired by [Fliqlo](http://fliqlo.com/). Fliqlo on Windows stopped working with a recent (Dec 2015?) Flash update which prompted this project. This project does NOT use Flash.
 
 ![Screenshot](screenshot.png)
 
