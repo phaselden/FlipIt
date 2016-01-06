@@ -1,9 +1,13 @@
 # FlipIt
 Flip Clock Screensaver
 
+![Screenshot](screenshot.png)
+
 ## Requirements
 
-Currently uses and requires the [Oswald](https://www.google.com/fonts/specimen/Oswald) font, available from Google.
+* Currently uses and requires the [Oswald](https://www.google.com/fonts/specimen/Oswald) font, available from Google.
+* Windows
+* .NET 4.6
 
 ## Acknowledgements
 
