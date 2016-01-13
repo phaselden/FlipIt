@@ -5,17 +5,17 @@ using System.Windows.Forms;
 
 namespace ScreenSaver
 {
-    public partial class SettingsForm : Form
-    {
-        public SettingsForm()
-        {
-            InitializeComponent();
+	public partial class SettingsForm : Form
+	{
+		public SettingsForm()
+		{
+			InitializeComponent();
 //            LoadSettings();
-        }
+		}
 
-        /// <summary>
-        /// Load display text from the Registry
-        /// </summary>
+		/// <summary>
+		/// Load display text from the Registry
+		/// </summary>
 //        private void LoadSettings()
 //        {
 //            RegistryKey key = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Demo_ScreenSaver");
@@ -25,9 +25,9 @@ namespace ScreenSaver
 //                textBox.Text = (string)key.GetValue("text");
 //        }
 
-        /// <summary>
-        /// Save text into the Registry.
-        /// </summary>
+		/// <summary>
+		/// Save text into the Registry.
+		/// </summary>
 //        private void SaveSettings()
 //        {
 //            // Create or get existing subkey
@@ -36,15 +36,15 @@ namespace ScreenSaver
 //            key.SetValue("text", textBox.Text);
 //        }
 
-        private void okButton_Click(object sender, EventArgs e)
-        {
+		private void okButton_Click(object sender, EventArgs e)
+		{
 //            SaveSettings();
-            Close();
-        }
+			Close();
+		}
 
-        private void cancelButton_Click(object sender, EventArgs e)
-        {
-            Close();
-        }
-    }
+		private void cancelButton_Click(object sender, EventArgs e)
+		{
+			Close();
+		}
+	}
 }
