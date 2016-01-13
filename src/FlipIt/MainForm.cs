@@ -28,12 +28,13 @@ namespace ScreenSaver
 		#endregion
 
 		private const int SplitWidth = 4;
+	    private const int FontScaleFactor = 3;
 
 		private Point mouseLocation;
         private readonly bool previewMode = false;
         private readonly bool showSeconds = false;
 	    private int lastMinute = -1;
-	    private readonly int fontSize = 250;
+	    private readonly int fontSize = 350;
 	    private Font timeFont;
 	    private Graphics _graphics;
 
@@ -61,6 +62,7 @@ namespace ScreenSaver
         {
             InitializeComponent();
             Bounds = bounds;
+            fontSize = bounds.Height / FontScaleFactor;
         }
 
         public MainForm(IntPtr previewWndHandle)
@@ -80,7 +82,7 @@ namespace ScreenSaver
             Location = new Point(0, 0);
 
             // Make text smaller for preview window
-	        fontSize = 24;
+            fontSize = Size.Height / FontScaleFactor;
 
             previewMode = true;
         }
@@ -135,9 +137,9 @@ namespace ScreenSaver
 		    var x = (Width - width)/2;
 		    var y = (Height - height)/2;
 
-		    DrawIt(x, y, height, DateTime.Now.Hour.ToString());
+		    DrawIt(x, y, height, DateTime.Now.ToString("%h")); // The % avoids a FormatException https://msdn.microsoft.com/en-us/library/8kb3ddd4(v=vs.110).aspx#UsingSingleSpecifiers
 
-		    x += height + (height/20);
+			x += height + (height/20);
 		    DrawIt(x, y, height, DateTime.Now.ToString("mm"));
 
 		    if (showSeconds)
