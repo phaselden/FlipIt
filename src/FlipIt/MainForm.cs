@@ -36,7 +36,10 @@ namespace ScreenSaver
 		private int lastMinute = -1;
 		private readonly int fontSize = 350;
 		private Font timeFont;
+		private Font smallFont;
 		private Graphics _graphics;
+
+		private const string familyName = "Oswald";
 
 		private Graphics Gfx
 		{
@@ -45,11 +48,19 @@ namespace ScreenSaver
 
 		private Font TheFont
 		{
-			get { return timeFont ?? (timeFont = new Font("Oswald", fontSize, FontStyle.Bold)); }
+			get { return timeFont ?? (timeFont = new Font(familyName, fontSize, FontStyle.Bold)); }
 		}
 
-		private readonly Brush FillBrush = new SolidBrush(Color.FromArgb(255, 30, 30, 30));
-		private readonly Brush FillBrush2 = new SolidBrush(Color.FromArgb(255, 25, 25, 25));
+		private Font SmallFont
+		{
+			get { return smallFont ?? (smallFont = new Font(familyName, fontSize / 9, FontStyle.Bold)); }
+		}
+
+		private static readonly Color backColorTop = Color.FromArgb(255, 15, 15, 15);
+		private static readonly Color backColorBottom = Color.FromArgb(255, 10, 10, 10);
+
+		private Brush backFillTop = new SolidBrush(backColorTop);
+		private Brush backFillBottom = new SolidBrush(backColorBottom);
 		private readonly Brush FontBrush = new SolidBrush(Color.FromArgb(255, 183, 183, 183));
 		private readonly Pen SplitPen = new Pen(Color.Black, SplitWidth);
 
@@ -137,7 +148,8 @@ namespace ScreenSaver
 			var x = (Width - width)/2;
 			var y = (Height - height)/2;
 
-			DrawIt(x, y, height, DateTime.Now.ToString("%h")); // The % avoids a FormatException https://msdn.microsoft.com/en-us/library/8kb3ddd4(v=vs.110).aspx#UsingSingleSpecifiers
+			var pm = DateTime.Now.Hour >= 12;
+			DrawIt(x, y, height, DateTime.Now.ToString("%h"), pm ? null : "AM", pm ? "PM" : null); // The % avoids a FormatException https://msdn.microsoft.com/en-us/library/8kb3ddd4(v=vs.110).aspx#UsingSingleSpecifiers
 
 			x += height + (height/20);
 			DrawIt(x, y, height, DateTime.Now.ToString("mm"));
@@ -149,7 +161,7 @@ namespace ScreenSaver
 			}
 		}
 
-		private void DrawIt(int x, int y, int size, string s)
+		private void DrawIt(int x, int y, int size, string s, string topString = null, string bottomString = null)
 		{
 			// Draw the background
 			var diff = size/10;
@@ -157,19 +169,19 @@ namespace ScreenSaver
 
 			var radius = size/20;
 			var diameter = radius*2;
-			Gfx.FillEllipse(FillBrush, x, y, diameter, diameter); // top left
-			Gfx.FillEllipse(FillBrush, x + size - diameter, y, diameter, diameter); // top right
-			Gfx.FillEllipse(FillBrush2, x, y + size - diameter, diameter, diameter); // bottom left
-			Gfx.FillEllipse(FillBrush2, x + size - diameter, y + size - diameter, diameter, diameter); //bottom right
+			Gfx.FillEllipse(backFillTop, x, y, diameter, diameter); // top left
+			Gfx.FillEllipse(backFillTop, x + size - diameter, y, diameter, diameter); // top right
+			Gfx.FillEllipse(backFillBottom, x, y + size - diameter, diameter, diameter); // bottom left
+			Gfx.FillEllipse(backFillBottom, x + size - diameter, y + size - diameter, diameter, diameter); //bottom right
 
-			Gfx.FillRectangle(FillBrush, x + radius, y, size - diameter, diameter);
-			Gfx.FillRectangle(FillBrush2, x + radius, y + size - diameter, size - diameter, diameter);
+			Gfx.FillRectangle(backFillTop, x + radius, y, size - diameter, diameter);
+			Gfx.FillRectangle(backFillBottom, x + radius, y + size - diameter, size - diameter, diameter);
 
 			var linGrBrush = new LinearGradientBrush(
 				new Point(10, y + radius),
 				new Point(10, y + size - radius),
-				Color.FromArgb(255, 30, 30, 30),
-				Color.FromArgb(255, 25, 25, 25));
+				backColorTop,
+				backColorBottom);
 			Gfx.FillRectangle(linGrBrush, x, y + radius, size, size - diameter);
 			linGrBrush.Dispose();
 
@@ -181,6 +193,17 @@ namespace ScreenSaver
 			// Draw the text	
 			var stringFormat = new StringFormat {Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center};
 			Gfx.DrawString(s, TheFont, FontBrush, textRect, stringFormat);
+
+			
+			if (topString != null)
+			{
+				//Gfx.DrawString(bottomString, SmallFont, FontBrush, textRect.X, textRect.Bottom - SmallFont.Height);
+				Gfx.DrawString(topString, SmallFont, FontBrush, x + diameter, y + diameter);
+			}
+			if (bottomString != null)
+			{
+				Gfx.DrawString(bottomString, SmallFont, FontBrush, x + diameter, y + size - diameter - SmallFont.Height);
+			}
 
 			// Horizontal dividing line
 			if (!previewMode)
