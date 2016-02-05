@@ -8,6 +8,7 @@ Flip Clock Screensaver. Inspired by [Fliqlo](http://fliqlo.com/). Fliqlo on Wind
 * Currently uses and requires the [Oswald](https://www.google.com/fonts/specimen/Oswald) font, available from Google.
 * Windows
 * .NET 4.6
+* Visual Studio: Run in Release mode and Run as Administrator to have the build event copy the screensaver to the Windows System32 folder. Set the Command line arguments to `/s` to have the screensaver display full screen on F5/Start.
 
 ## Acknowledgements
 
