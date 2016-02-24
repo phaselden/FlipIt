@@ -21,7 +21,7 @@ namespace ScreenSaver
 				string firstArgument = args[0].ToLower().Trim();
 				string secondArgument = null;
 
-				// Handle cases where arguments are separated by colon. 
+				// Handle cases where arguments are separated by colon.
 				// Examples: /c:1234567 or /P:1234567
 				if (firstArgument.Length > 2)
 				{
@@ -30,7 +30,7 @@ namespace ScreenSaver
 				}
 				else if (args.Length > 1)
 					secondArgument = args[1];
-				
+
 				if (firstArgument == "/c")           // Configuration mode
 				{
 					Application.Run(new SettingsForm());
@@ -43,7 +43,7 @@ namespace ScreenSaver
 							"ScreenSaver", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 						return;
 					}
-					
+
 					IntPtr previewWndHandle = new IntPtr(long.Parse(secondArgument));
 					Application.Run(new MainForm(previewWndHandle));
 				}
@@ -51,7 +51,7 @@ namespace ScreenSaver
 				{
 					ShowScreenSaver();
 					Application.Run();
-				}  
+				}
 				else    // Undefined argument
 				{
 					MessageBox.Show("Sorry, but the command line argument \"" + firstArgument +

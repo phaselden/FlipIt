@@ -39,7 +39,11 @@ namespace ScreenSaver
 		private Font smallFont;
 		private Graphics _graphics;
 
-		private const string familyName = "Oswald";
+		// Alternative fonts:
+		// * league-gothic from https://github.com/theleagueof/league-gothic
+		// * http://tipotype.com/aileron/
+
+		private const string familyName = "Oswald"; //"Texgyreheroscn";"Bebas"
 
 		private Graphics Gfx
 		{
@@ -190,11 +194,10 @@ namespace ScreenSaver
 //				s = "\u2002" + s; // Add an EN SPACE which is 1/2 em
 //			}
 
-			// Draw the text	
+			// Draw the text
 			var stringFormat = new StringFormat {Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center};
 			Gfx.DrawString(s, TheFont, FontBrush, textRect, stringFormat);
 
-			
 			if (topString != null)
 			{
 				//Gfx.DrawString(bottomString, SmallFont, FontBrush, textRect.X, textRect.Bottom - SmallFont.Height);
