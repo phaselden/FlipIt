@@ -33,6 +33,14 @@ bld/
 *.VisualState.xml
 TestResult.xml
 
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sw*
+
 # Build Results of an ATL Project
 [Dd]ebugPS/
 [Rr]eleasePS/
