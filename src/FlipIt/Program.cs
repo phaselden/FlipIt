@@ -72,7 +72,7 @@ namespace ScreenSaver
 		{
 			foreach (Screen screen in Screen.AllScreens)
 			{
-				MainForm screensaver = new MainForm(screen.Bounds);
+				MainForm screensaver = new MainForm(screen.Bounds, screen.Primary);
 				screensaver.Show();
 			}
 		}
