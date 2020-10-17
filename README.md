@@ -11,7 +11,7 @@ Flip Clock Screensaver. Inspired by [Fliqlo](http://fliqlo.com/). Fliqlo on Wind
 
 ## Installation
 
-To install without building with Visual Studio, copy the .scr file on the Releases page to:
+To install without building with Visual Studio, copy the .scr file on the [Releases](https://github.com/phaselden/FlipIt/releases) page to:
     * C:\Windows\SysWOW64 on 64-bit Windows.
     * C:\Windows\System32 on 32-bit Windows
 
