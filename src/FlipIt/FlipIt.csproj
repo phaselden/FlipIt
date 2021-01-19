@@ -65,8 +65,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="City.cs" />
+    <Compile Include="DisplayType.cs" />
+    <Compile Include="FlipItSettings.cs" />
+    <Compile Include="IniFile.cs" />
     <Compile Include="Int32Extensions.cs" />
     <Compile Include="RoundedRectangle.cs" />
+    <Compile Include="ScreenSetting.cs" />
     <Compile Include="SettingsForm.cs">
       <SubType>Form</SubType>
     </Compile>

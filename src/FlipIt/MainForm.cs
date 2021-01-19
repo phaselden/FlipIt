@@ -39,8 +39,9 @@ namespace ScreenSaver
 		private const int splitWidth = 4;
 		private const int cityBoxSplitWidth = 2;
 		private const int fontScaleFactor = 3;
-		
-		private readonly bool isPrimaryScreen;
+
+        private readonly bool _display24HourTime;
+        private readonly ScreenSetting _screenSetting;
 		private Point mouseLocation;
 		private readonly bool previewMode = false;
 		private readonly bool showSeconds = false;
@@ -89,9 +90,10 @@ namespace ScreenSaver
 			InitializeComponent();
 		}
 
-		public MainForm(Rectangle bounds, bool isPrimaryScreen)
+		public MainForm(Rectangle bounds, bool display24HourTime, ScreenSetting screenSetting)
 		{
-			this.isPrimaryScreen = isPrimaryScreen;
+            _display24HourTime = display24HourTime;
+            _screenSetting = screenSetting;
 			InitializeComponent();
 			Bounds = bounds;
 			fontSize = bounds.Height / fontScaleFactor;
@@ -137,7 +139,7 @@ namespace ScreenSaver
 				//SystemTime.NowForTesting = new DateTime(2020, 6, 7, 1, 23, 45);
 				//SystemTime.NowForTesting = new DateTime(2020, 6, 7, 23, 45, 57);
 			}
-		}
+        }
 
 		private void moveTimer_Tick(object sender, EventArgs e)
 		{
@@ -170,11 +172,11 @@ namespace ScreenSaver
 				Gfx.TextRenderingHint = TextRenderingHint.AntiAlias;
 				Gfx.SmoothingMode = SmoothingMode.HighQuality;
 
-				if (isPrimaryScreen || previewMode)
-				{
+				if (previewMode || _screenSetting.DisplayType == DisplayType.CurrentTime)
+                {
 					DrawCurrentTime();
 				}
-				else
+				else if (_screenSetting.DisplayType == DisplayType.WorldTime)
 				{
 					DrawCities();
 				}
@@ -193,8 +195,15 @@ namespace ScreenSaver
 			var x = (Width - width)/2;
 			var y = (Height - height)/2;
 
-			var pm = SystemTime.Now.Hour >= 12;
-			DrawIt(x, y, height, SystemTime.Now.ToString("%h"), pm ? null : "AM", pm ? "PM" : null); // The % avoids a FormatException https://msdn.microsoft.com/en-us/library/8kb3ddd4(v=vs.110).aspx#UsingSingleSpecifiers
+            if (!_display24HourTime)
+            {
+				var pm = SystemTime.Now.Hour >= 12;
+			    DrawIt(x, y, height, SystemTime.Now.ToString("%h"), pm ? null : "AM", pm ? "PM" : null); // The % avoids a FormatException https://msdn.microsoft.com/en-us/library/8kb3ddd4(v=vs.110).aspx#UsingSingleSpecifiers
+            }
+            else
+            {
+                DrawIt(x, y, height, SystemTime.Now.ToString("HH"));
+			}
 
 			x += height + (height/20);
 			DrawIt(x, y, height, SystemTime.Now.ToString("mm"));
