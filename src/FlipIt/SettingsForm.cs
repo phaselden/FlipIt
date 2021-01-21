@@ -18,7 +18,7 @@ namespace ScreenSaver
 		
         private void SaveSettings()
         {
-            var settingsFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "FlipIt");
+            var settingsFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "FlipIt");
             if (!Directory.Exists(settingsFolder))
             {
                 Directory.CreateDirectory(settingsFolder);
@@ -146,6 +146,11 @@ namespace ScreenSaver
         private void display24hrRadioButton_CheckedChanged(object sender, EventArgs e)
         {
             _settings.Display24HrTime = true;
+        }
+
+        private void githubLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://github.com/phaselden/FlipIt");
         }
     }
 }

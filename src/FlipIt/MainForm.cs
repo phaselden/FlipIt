@@ -34,7 +34,7 @@ namespace ScreenSaver
 		[DllImport("user32.dll")]
 		static extern bool GetClientRect(IntPtr hWnd, out Rectangle lpRect);
 
-		#endregion
+        #endregion
 
 		private const int splitWidth = 4;
 		private const int cityBoxSplitWidth = 2;
@@ -52,17 +52,29 @@ namespace ScreenSaver
 		private Font smallCityFont;
 		private Font primarySmallFont;
 		private Graphics graphics;
+		private PrivateFontCollection _pfc;
+		private FontFamily _fontFamily;
 
-		// Alternative fonts:
-		// * league-gothic from https://github.com/theleagueof/league-gothic
-		// * http://tipotype.com/aileron/
+		private FontFamily FontFamily
+        {
+            get
+            {
+                if (_fontFamily == null)
+                {
+                    if (_pfc == null)
+                    {
+                        _pfc = InitFonts();
+                    }
+                    _fontFamily = _pfc.Families[0];
+                }
+                return _fontFamily ?? (_fontFamily = _pfc.Families[0]);
+            }
+        }
 
-		private const string fontFamilyName = "Oswald"; //"Texgyreheroscn";"Bebas"
+        private Graphics Gfx => graphics ?? (graphics = CreateGraphics());
 
-		private Graphics Gfx => graphics ?? (graphics = CreateGraphics());
-
-		private Font PrimaryFont => primaryFont ?? (primaryFont = new Font(fontFamilyName, fontSize, FontStyle.Bold));
-		private Font PrimarySmallFont => primarySmallFont ?? (primarySmallFont = new Font(fontFamilyName, fontSize / 9, FontStyle.Bold));
+		private Font PrimaryFont => primaryFont ?? (primaryFont = new Font(FontFamily, fontSize, FontStyle.Bold));
+		private Font PrimarySmallFont => primarySmallFont ?? (primarySmallFont = new Font(FontFamily, fontSize / 9, FontStyle.Bold));
 
 		private static readonly Color backColorTop = Color.FromArgb(255, 15, 15, 15);
 		private static readonly Color backColorBottom = Color.FromArgb(255, 10, 10, 10);
@@ -97,10 +109,13 @@ namespace ScreenSaver
 			InitializeComponent();
 			Bounds = bounds;
 			fontSize = bounds.Height / fontScaleFactor;
-		}
+        }
 
-		public MainForm(IntPtr previewWndHandle)
+		public MainForm(IntPtr previewWndHandle, bool display24HourTime, ScreenSetting screenSetting)
 		{
+            _display24HourTime = display24HourTime;
+            _screenSetting = screenSetting;
+
 			InitializeComponent();
 
 			// Set the preview window as the parent of this window
@@ -165,6 +180,33 @@ namespace ScreenSaver
 			//	        }
 		}
 
+        private PrivateFontCollection InitFonts()
+        {
+			// We don't add both fonts at the same time because I can only get the private font collection
+			// to return the first one we add. If the first one is the non-bold one and we ask for a bold one
+			// then it seems to have a go at generating bold rather than using the one we gave it.
+			// The system font collection does not seem to have this problem.
+
+			var pfc = new PrivateFontCollection();
+			if (_screenSetting.DisplayType == DisplayType.CurrentTime)
+            {
+                AddFont(pfc, Properties.Resources.HelveticaLTStd_BoldCond);
+            }
+            else
+            {
+                AddFont(pfc, Properties.Resources.HelveticaLTStd_Cond);
+            }
+			return pfc;
+        }
+
+        private static void AddFont(PrivateFontCollection pfc, byte[] fontResource)
+        {
+            IntPtr ptr = Marshal.AllocCoTaskMem(fontResource.Length);  // create an unsafe memory block for the font data
+            Marshal.Copy(fontResource, 0, ptr, fontResource.Length);  // copy the bytes to the unsafe memory block
+			pfc.AddMemoryFont(ptr, fontResource.Length);    // pass the font to the font collection
+            Marshal.FreeCoTaskMem(ptr);
+		}
+
 		private void DrawIt()
 		{
 			try
@@ -189,7 +231,7 @@ namespace ScreenSaver
 
 		private void DrawCurrentTime()
 		{
-			var height = PrimaryFont.Height*10/11;
+			var height = PrimaryFont.Height * 10/10;
 			var width = !showSeconds ? Convert.ToInt32(2.05*height) : Convert.ToInt32(3.1 * height);
 
 			var x = (Width - width)/2;
@@ -293,8 +335,8 @@ namespace ScreenSaver
 				
 			if (cityFont == null)
 			{
-				cityFont = new Font(fontFamilyName, boxHeight.Percent(80), FontStyle.Regular, GraphicsUnit.Pixel);
-				smallCityFont = new Font(fontFamilyName, boxHeight.Percent(25), FontStyle.Regular, GraphicsUnit.Pixel);
+				cityFont = new Font(FontFamily, boxHeight.Percent(80), FontStyle.Regular, GraphicsUnit.Pixel);
+				smallCityFont = new Font(FontFamily, boxHeight.Percent(25), FontStyle.Regular, GraphicsUnit.Pixel);
 			}
 
 			var verticalGap = boxHeight.Percent(verticalGapBetweenBoxesPercent);
@@ -495,5 +537,24 @@ namespace ScreenSaver
 		{
 			DrawIt();
 		}
-	}
+
+        private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            DisposeFontResources();
+        }
+
+        private void DisposeFontResources()
+        {
+			if (_fontFamily != null)
+            {
+                _fontFamily.Dispose();
+                _fontFamily = null;
+            }
+            if (_pfc != null)
+            {
+                _pfc.Dispose();
+                _pfc = null;
+            }
+		}
+    }
 }

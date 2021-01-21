@@ -48,7 +48,7 @@ namespace ScreenSaver
 					}
 
 					IntPtr previewWndHandle = new IntPtr(long.Parse(secondArgument));
-					Application.Run(new MainForm(previewWndHandle));
+					Application.Run(new MainForm(previewWndHandle, settings.Display24HrTime, settings.ScreenSettings[0]));
 				}
 				else if (firstArgument == "/s")      // Full-screen mode
 				{
@@ -89,7 +89,7 @@ namespace ScreenSaver
 
 			var settings = new FlipItSettings();
 
-			var settingsFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "FlipIt");
+			var settingsFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "FlipIt");
 			var iniFilePath = Path.Combine(settingsFolder, "Settings.ini");
             if (File.Exists(iniFilePath))
             {
