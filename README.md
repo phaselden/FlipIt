@@ -1,11 +1,13 @@
 # FlipIt
+
 Flip Clock Screensaver. Inspired by [Fliqlo](http://fliqlo.com/). Fliqlo on Windows stopped working with a recent (Dec 2015?) Flash update which prompted this project. This project does NOT use Flash.
 
 ![Screenshot](screenshot.png)
 
+![Screenshot](worldtimes.png)
+
 ## Requirements
 
-* Currently uses and requires the [Oswald](https://www.google.com/fonts#UsePlace:use/Collection:Oswald) (Bold 700) font, available from Google.
 * Microsoft Windows
 * .NET Framework 4.8
 
