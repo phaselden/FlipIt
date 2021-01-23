@@ -65,11 +65,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="City.cs" />
+    <Compile Include="CurrentTimeScreen.cs" />
     <Compile Include="DisplayType.cs" />
+    <Compile Include="DstIndicatorStyle.cs" />
     <Compile Include="FlipItSettings.cs" />
     <Compile Include="IniFile.cs" />
     <Compile Include="Int32Extensions.cs" />
     <Compile Include="RoundedRectangle.cs" />
+    <Compile Include="TimeScreen.cs" />
     <Compile Include="ScreenSetting.cs" />
     <Compile Include="SettingsForm.cs">
       <SubType>Form</SubType>
@@ -86,6 +89,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SystemTime.cs" />
+    <Compile Include="WorldTimesScreen.cs" />
     <EmbeddedResource Include="SettingsForm.resx">
       <DependentUpon>SettingsForm.cs</DependentUpon>
     </EmbeddedResource>
