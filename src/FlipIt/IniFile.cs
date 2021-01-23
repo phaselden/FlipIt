@@ -77,7 +77,7 @@ namespace ScreenSaver
 
         public void WriteString(string section, string key, string value)
         {
-            var res = WritePrivateProfileString(section, key, value, _path);
+            WritePrivateProfileString(section, key, value, _path);
         }
 
         public void DeleteKey(string section, string key)

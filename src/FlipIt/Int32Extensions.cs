@@ -1,6 +1,6 @@
 ﻿namespace ScreenSaver
 {
-    static class Int32Extensions
+    internal static class Int32Extensions
     {
         internal static int Percent(this int value, int percent)
         {

@@ -1,10 +1,12 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.Drawing.Drawing2D;
 
 namespace ScreenSaver
 {
     // Copied from https://web.archive.org/web/20111110163706/http://www.switchonthecode.com/tutorials/csharp-creating-rounded-rectangles-using-a-graphics-path
     
+    [Flags]
     public enum RectangleCorners
     {
         None = 0, TopLeft = 1, TopRight = 2, BottomLeft = 4, BottomRight = 8,

@@ -12,7 +12,7 @@ using System.Runtime.InteropServices;
 
 namespace ScreenSaver
 {
-	enum Style
+	enum DstIndicatorStyle
 	{
 		SmallDst,  // Small "DST" in top half, and day diff shown as -1d or +1d in bottom half
 		DstAsAsterisk  // If day different, shows as mmm
@@ -36,22 +36,22 @@ namespace ScreenSaver
 
         #endregion
 
-		private const int splitWidth = 4;
-		private const int cityBoxSplitWidth = 2;
-		private const int fontScaleFactor = 3;
+		private const int SplitWidth = 4;
+		private const int CityBoxSplitWidth = 2;
+		private const int FontScaleFactor = 3;
 
         private readonly bool _display24HourTime;
         private readonly ScreenSetting _screenSetting;
-		private Point mouseLocation;
-		private readonly bool previewMode = false;
-		private readonly bool showSeconds = false;
-		private int lastMinute = -1;
-		private readonly int fontSize = 350;
-		private Font primaryFont;
-		private Font cityFont;
-		private Font smallCityFont;
-		private Font primarySmallFont;
-		private Graphics graphics;
+		private Point _mouseLocation;
+		private readonly bool _isPreviewMode;
+		private readonly bool _showSeconds = false;
+		private int _lastMinute = -1;
+		private readonly int _fontSize = 350;
+		private Font _primaryFont;
+		private Font _cityFont;
+		private Font _smallCityFont;
+		private Font _primarySmallFont;
+		private Graphics _graphics;
 		private PrivateFontCollection _pfc;
 		private FontFamily _fontFamily;
 
@@ -71,31 +71,31 @@ namespace ScreenSaver
             }
         }
 
-        private Graphics Gfx => graphics ?? (graphics = CreateGraphics());
+        private Graphics Gfx => _graphics ?? (_graphics = CreateGraphics());
 
-		private Font PrimaryFont => primaryFont ?? (primaryFont = new Font(FontFamily, fontSize, FontStyle.Bold));
-		private Font PrimarySmallFont => primarySmallFont ?? (primarySmallFont = new Font(FontFamily, fontSize / 9, FontStyle.Bold));
+		private Font PrimaryFont => _primaryFont ?? (_primaryFont = new Font(FontFamily, _fontSize, FontStyle.Bold));
+		private Font PrimarySmallFont => _primarySmallFont ?? (_primarySmallFont = new Font(FontFamily, _fontSize / 9, FontStyle.Bold));
 
-		private static readonly Color backColorTop = Color.FromArgb(255, 15, 15, 15);
-		private static readonly Color backColorBottom = Color.FromArgb(255, 10, 10, 10);
+		private static readonly Color BackColorTop = Color.FromArgb(255, 15, 15, 15);
+		private static readonly Color BackColorBottom = Color.FromArgb(255, 10, 10, 10);
 
-		private readonly Brush backFillTop = new SolidBrush(backColorTop);
-		private readonly Pen cityBoxPen = new Pen(backColorTop);
-		private readonly Brush backFillBottom = new SolidBrush(backColorBottom);
-		private readonly Brush fontBrush = new SolidBrush(Color.FromArgb(255, 183, 183, 183));
-		private readonly Pen splitPen = new Pen(Color.Black, splitWidth);
-		private readonly Pen smallSplitPen = new Pen(Color.Black, cityBoxSplitWidth);
+		private readonly Brush _backFillTop = new SolidBrush(BackColorTop);
+		private readonly Pen _cityBoxPen = new Pen(BackColorTop);
+		private readonly Brush _backFillBottom = new SolidBrush(BackColorBottom);
+		private readonly Brush _fontBrush = new SolidBrush(Color.FromArgb(255, 183, 183, 183));
+		private readonly Pen _splitPen = new Pen(Color.Black, SplitWidth);
+		private readonly Pen _smallSplitPen = new Pen(Color.Black, CityBoxSplitWidth);
 
-		private const int boxWidthPercentage = 70;
-		private const int horizontalGapBetweenBoxesPercent = 5;
-		private const int verticalGapBetweenBoxesPercent = 10;
-		const int timeLengthInChars = 9;
+		private const int BoxWidthPercentage = 70;
+		private const int HorizontalGapBetweenBoxesPercent = 5;
+		private const int VerticalGapBetweenBoxesPercent = 10;
+		const int TimeLengthInChars = 9;
 		
-		Style cityDisplayStyle = Style.DstAsAsterisk; // .SmallDst;
+		DstIndicatorStyle _cityDisplayDstIndicatorStyle = DstIndicatorStyle.DstAsAsterisk; // .SmallDst;
 		
 
-		private List<City> cities;
-		private List<City> Cities => cities ?? (cities = GetCities());
+		private List<City> _cities;
+		private List<City> Cities => _cities ?? (_cities = GetCities());
 		
 		public MainForm()
 		{
@@ -108,7 +108,7 @@ namespace ScreenSaver
             _screenSetting = screenSetting;
 			InitializeComponent();
 			Bounds = bounds;
-			fontSize = bounds.Height / fontScaleFactor;
+			_fontSize = bounds.Height / FontScaleFactor;
         }
 
 		public MainForm(IntPtr previewWndHandle, bool display24HourTime, ScreenSetting screenSetting)
@@ -130,9 +130,9 @@ namespace ScreenSaver
 			Location = new Point(0, 0);
 
 			// Make text smaller for preview window
-			fontSize = Size.Height / fontScaleFactor;
+			_fontSize = Size.Height / FontScaleFactor;
 
-			previewMode = true;
+			_isPreviewMode = true;
 		}
 
 		private void MainForm_Load(object sender, EventArgs e)
@@ -161,13 +161,13 @@ namespace ScreenSaver
 			var now = SystemTime.Now;
 
 			var minute = now.Minute;
-			if (lastMinute != minute)
+			if (_lastMinute != minute)
 			{
 				// Update every minute
-				lastMinute = minute;
+				_lastMinute = minute;
 				DrawIt();
 			}
-			if (showSeconds)
+			if (_showSeconds)
 			{
 				DrawIt();
 			}
@@ -214,7 +214,7 @@ namespace ScreenSaver
 				Gfx.TextRenderingHint = TextRenderingHint.AntiAlias;
 				Gfx.SmoothingMode = SmoothingMode.HighQuality;
 
-				if (previewMode || _screenSetting.DisplayType == DisplayType.CurrentTime)
+				if (_isPreviewMode || _screenSetting.DisplayType == DisplayType.CurrentTime)
                 {
 					DrawCurrentTime();
 				}
@@ -232,7 +232,7 @@ namespace ScreenSaver
 		private void DrawCurrentTime()
 		{
 			var height = PrimaryFont.Height * 10/10;
-			var width = !showSeconds ? Convert.ToInt32(2.05*height) : Convert.ToInt32(3.1 * height);
+			var width = !_showSeconds ? Convert.ToInt32(2.05*height) : Convert.ToInt32(3.1 * height);
 
 			var x = (Width - width)/2;
 			var y = (Height - height)/2;
@@ -250,7 +250,7 @@ namespace ScreenSaver
 			x += height + (height/20);
 			DrawIt(x, y, height, SystemTime.Now.ToString("mm"));
 
-			if (showSeconds)
+			if (_showSeconds)
 			{
 				x += height + (height/20);
 				DrawIt(x, y, height, SystemTime.Now.ToString("ss"));
@@ -265,19 +265,19 @@ namespace ScreenSaver
 
 			var radius = size/20;
 			var diameter = radius*2;
-			Gfx.FillEllipse(backFillTop, x, y, diameter, diameter); // top left
-			Gfx.FillEllipse(backFillTop, x + size - diameter, y, diameter, diameter); // top right
-			Gfx.FillEllipse(backFillBottom, x, y + size - diameter, diameter, diameter); // bottom left
-			Gfx.FillEllipse(backFillBottom, x + size - diameter, y + size - diameter, diameter, diameter); //bottom right
+			Gfx.FillEllipse(_backFillTop, x, y, diameter, diameter); // top left
+			Gfx.FillEllipse(_backFillTop, x + size - diameter, y, diameter, diameter); // top right
+			Gfx.FillEllipse(_backFillBottom, x, y + size - diameter, diameter, diameter); // bottom left
+			Gfx.FillEllipse(_backFillBottom, x + size - diameter, y + size - diameter, diameter, diameter); //bottom right
 
-			Gfx.FillRectangle(backFillTop, x + radius, y, size - diameter, diameter);
-			Gfx.FillRectangle(backFillBottom, x + radius, y + size - diameter, size - diameter, diameter);
+			Gfx.FillRectangle(_backFillTop, x + radius, y, size - diameter, diameter);
+			Gfx.FillRectangle(_backFillBottom, x + radius, y + size - diameter, size - diameter, diameter);
 
 			var linGrBrush = new LinearGradientBrush(
 				new Point(10, y + radius),
 				new Point(10, y + size - radius),
-				backColorTop,
-				backColorBottom);
+				BackColorTop,
+				BackColorBottom);
 			Gfx.FillRectangle(linGrBrush, x, y + radius, size, size - diameter);
 			linGrBrush.Dispose();
 
@@ -288,23 +288,23 @@ namespace ScreenSaver
 
 			// Draw the text
 			var stringFormat = new StringFormat {Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center};
-			Gfx.DrawString(s, PrimaryFont, fontBrush, textRect, stringFormat);
+			Gfx.DrawString(s, PrimaryFont, _fontBrush, textRect, stringFormat);
 
 			if (topString != null)
 			{
 				//Gfx.DrawString(bottomString, SmallFont, FontBrush, textRect.X, textRect.Bottom - SmallFont.Height);
-				Gfx.DrawString(topString, PrimarySmallFont, fontBrush, x + diameter, y + diameter);
+				Gfx.DrawString(topString, PrimarySmallFont, _fontBrush, x + diameter, y + diameter);
 			}
 			if (bottomString != null)
 			{
-				Gfx.DrawString(bottomString, PrimarySmallFont, fontBrush, x + diameter, y + size - diameter - PrimarySmallFont.Height);
+				Gfx.DrawString(bottomString, PrimarySmallFont, _fontBrush, x + diameter, y + size - diameter - PrimarySmallFont.Height);
 			}
 
 			// Horizontal dividing line
-			if (!previewMode)
+			if (!_isPreviewMode)
 			{
-				var penY = y + (size/2) - (splitWidth/2);
-				Gfx.DrawLine(splitPen, x, penY, x + size, penY);
+				var penY = y + (size/2) - (SplitWidth/2);
+				Gfx.DrawLine(_splitPen, x, penY, x + size, penY);
 			}
 			else
 			{
@@ -320,42 +320,42 @@ namespace ScreenSaver
 			
 			var maxNameLengthInChars = Cities.Max(c => c.DisplayName.Length);
 			
-			var maxRowLengthInChars = cityDisplayStyle == Style.SmallDst 
-				? maxNameLengthInChars + 2 + timeLengthInChars + 1 + dstIndicatorLength 
-				: maxNameLengthInChars + 2 + timeLengthInChars + 1 + dayIndicatorLength;
+			var maxRowLengthInChars = _cityDisplayDstIndicatorStyle == DstIndicatorStyle.SmallDst 
+				? maxNameLengthInChars + 2 + TimeLengthInChars + 1 + dstIndicatorLength 
+				: maxNameLengthInChars + 2 + TimeLengthInChars + 1 + dayIndicatorLength;
 
 			var maxWidth = Width - 40; // leave some margin
 			var maxHeight = Height - 40;
 			
 			var roughBoxWidth = maxWidth / maxRowLengthInChars; // the rough max width of boxes
 			var roughBoxHeight = maxHeight / Cities.Count;
-			var boxHeight = Math.Min(roughBoxHeight, roughBoxWidth.PercentInv(boxWidthPercentage));
-			boxHeight -= boxHeight.Percent(verticalGapBetweenBoxesPercent);
+			var boxHeight = Math.Min(roughBoxHeight, roughBoxWidth.PercentInv(BoxWidthPercentage));
+			boxHeight -= boxHeight.Percent(VerticalGapBetweenBoxesPercent);
 			boxHeight = Math.Min(boxHeight, maxBoxHeight);
 				
-			if (cityFont == null)
+			if (_cityFont == null)
 			{
-				cityFont = new Font(FontFamily, boxHeight.Percent(80), FontStyle.Regular, GraphicsUnit.Pixel);
-				smallCityFont = new Font(FontFamily, boxHeight.Percent(25), FontStyle.Regular, GraphicsUnit.Pixel);
+				_cityFont = new Font(FontFamily, boxHeight.Percent(80), FontStyle.Regular, GraphicsUnit.Pixel);
+				_smallCityFont = new Font(FontFamily, boxHeight.Percent(25), FontStyle.Regular, GraphicsUnit.Pixel);
 			}
 
-			var verticalGap = boxHeight.Percent(verticalGapBetweenBoxesPercent);
+			var verticalGap = boxHeight.Percent(VerticalGapBetweenBoxesPercent);
 
 			//var heightForAllRows = (boxHeight + verticalGap) * cities.Count - verticalGap;
 			var heightForAllRows = CalcSize(Cities.Count,boxHeight, verticalGap);
 			var y = (Height - heightForAllRows) / 2;
 			if (y < 20) 
 				y = 20;
-			var startingX = (Width - maxRowLengthInChars * boxHeight.Percent(boxWidthPercentage)).Percent(50);
+			var startingX = (Width - maxRowLengthInChars * boxHeight.Percent(BoxWidthPercentage)).Percent(50);
 
-			var boxSize = new Size(boxHeight.Percent(boxWidthPercentage), boxHeight);
-			var horizontalGap = boxSize.Height.Percent(horizontalGapBetweenBoxesPercent);
+			var boxSize = new Size(boxHeight.Percent(BoxWidthPercentage), boxHeight);
+			var horizontalGap = boxSize.Height.Percent(HorizontalGapBetweenBoxesPercent);
 			
 			foreach (var city in Cities.OrderBy(c => c.CurrentTime))
 			{
 				city.RefreshTime(SystemTime.Now);
-				var s = city.DisplayName.PadRight(maxNameLengthInChars + 2) + FormatTime(city, cityDisplayStyle == Style.DstAsAsterisk);
-				DrawString(startingX, y, boxSize, horizontalGap, s, city, cityDisplayStyle);
+				var s = city.DisplayName.PadRight(maxNameLengthInChars + 2) + FormatTime(city, _cityDisplayDstIndicatorStyle == DstIndicatorStyle.DstAsAsterisk);
+				DrawString(startingX, y, boxSize, horizontalGap, s, city, _cityDisplayDstIndicatorStyle);
 				y += boxHeight + verticalGap;
 			}
 		}
@@ -369,7 +369,7 @@ namespace ScreenSaver
 		{
 			var suffix = appendAsteriskIfDst && city.IsDaylightSavingTime ? "*" : " ";
 			var result = $"{city.CurrentTime:h:mm tt}{suffix}";
-			return $"{result, timeLengthInChars}";  // right aligned in 9 chars
+			return $"{result, TimeLengthInChars}";  // right aligned in 9 chars
 		}
 
 		private List<City> GetCities()
@@ -397,7 +397,7 @@ namespace ScreenSaver
 			return result;
 		}
 
-		private void DrawString(int x, int y, Size boxSize, int horizontalGap, string s, City city, Style style)
+		private void DrawString(int x, int y, Size boxSize, int horizontalGap, string s, City city, DstIndicatorStyle dstIndicatorStyle)
 		{
 			var boxRectangle = new Rectangle(new Point(x, y), boxSize);
 			foreach (var c in s.ToUpperInvariant())
@@ -406,7 +406,7 @@ namespace ScreenSaver
 				boxRectangle.X = boxRectangle.Right + horizontalGap;
 			}
 
-			if (style == Style.SmallDst)
+			if (dstIndicatorStyle == DstIndicatorStyle.SmallDst)
 			{
 				if (city.IsDaylightSavingTime || city.DaysDifference != 0)
 				{
@@ -441,7 +441,7 @@ namespace ScreenSaver
 		private void DrawCharInBox(Rectangle boxRectangle, char theChar)
 		{
 			DrawBox(boxRectangle);
-			DrawString(theChar.ToString(), cityFont, boxRectangle);
+			DrawString(theChar.ToString(), _cityFont, boxRectangle);
 			DrawSplitter(boxRectangle);
 		}
 		
@@ -453,8 +453,8 @@ namespace ScreenSaver
 
 		private void DrawSplitter(Rectangle box)
 		{
-			var penY = box.Y + (box.Height/2) - (cityBoxSplitWidth/2);
-			Gfx.DrawLine(smallSplitPen, box.Left, penY, box.Right + 1, penY);
+			var penY = box.Y + (box.Height/2) - (CityBoxSplitWidth/2);
+			Gfx.DrawLine(_smallSplitPen, box.Left, penY, box.Right + 1, penY);
 		}
 		
 		private void DrawBox(Rectangle box)
@@ -466,8 +466,8 @@ namespace ScreenSaver
 			var radius = box.Height / 20;
 			
 			var path = RoundedRectangle.Create(box, radius);
-			Gfx.DrawPath(cityBoxPen, path);
-			Gfx.FillPath(backFillTop, path);
+			Gfx.DrawPath(_cityBoxPen, path);
+			Gfx.FillPath(_backFillTop, path);
 		}
 
 		private void DrawBox(Rectangle box, string topString, string bottomString)
@@ -486,40 +486,40 @@ namespace ScreenSaver
 		private void DrawHalfBox(Rectangle halfRectangle, int radius, RectangleCorners corners, string s)
 		{
 			var path = RoundedRectangle.Create(halfRectangle, radius, corners);
-			Gfx.DrawPath(cityBoxPen, path);
-			Gfx.FillPath(backFillTop, path);
+			Gfx.DrawPath(_cityBoxPen, path);
+			Gfx.FillPath(_backFillTop, path);
 			if (!String.IsNullOrEmpty(s))
 			{
-				DrawString(s, smallCityFont, halfRectangle);
+				DrawString(s, _smallCityFont, halfRectangle);
 			}
 		}
 
 		private void DrawString(string s, Font font, Rectangle box)
 		{
 			var stringFormat = new StringFormat {Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center};
-			Gfx.DrawString(s, font, fontBrush, box, stringFormat);
+			Gfx.DrawString(s, font, _fontBrush, box, stringFormat);
 		}
 
 		private void MainForm_MouseMove(object sender, MouseEventArgs e)
 		{
-			if (!previewMode)
+			if (!_isPreviewMode)
 			{
-				if (!mouseLocation.IsEmpty)
+				if (!_mouseLocation.IsEmpty)
 				{
 					// Terminate if mouse is moved a significant distance
-					if (Math.Abs(mouseLocation.X - e.X) > 5 ||
-						Math.Abs(mouseLocation.Y - e.Y) > 5)
+					if (Math.Abs(_mouseLocation.X - e.X) > 5 ||
+						Math.Abs(_mouseLocation.Y - e.Y) > 5)
 						Application.Exit();
 				}
 
 				// Update current mouse location
-				mouseLocation = e.Location;
+				_mouseLocation = e.Location;
 			}
 		}
 
 		private void MainForm_KeyPress(object sender, KeyPressEventArgs e)
 		{
-			if (!previewMode)
+			if (!_isPreviewMode)
 			{
 				Application.Exit();
 			}
@@ -527,7 +527,7 @@ namespace ScreenSaver
 
 		private void MainForm_MouseClick(object sender, MouseEventArgs e)
 		{
-			if (!previewMode)
+			if (!_isPreviewMode)
 			{
 				Application.Exit();
 			}
