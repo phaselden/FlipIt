@@ -11,8 +11,8 @@ namespace ScreenSaver
         private readonly List<City> _cities;
 
         private readonly Pen _smallSplitPen = new Pen(Color.Black, SplitWidth);
-        private readonly Brush _backFillTop = new SolidBrush(BackColorTop);
-        private readonly Pen _cityBoxPen = new Pen(BackColorTop);
+        private readonly Brush _backFillTop = new SolidBrush(BackColorBottom);
+        private readonly Pen _cityBoxPen = new Pen(BackColorBottom);
 
         private Font _largeFont;
         private Font _smallFont;
@@ -55,12 +55,6 @@ namespace ScreenSaver
             var boxHeight = Math.Min(roughBoxHeight, roughBoxWidth.PercentInv(BoxWidthPercentage));
             boxHeight -= boxHeight.Percent(VerticalGapBetweenBoxesPercent);
             _boxHeight = Math.Min(boxHeight, maxBoxHeight);
-
-            // if (_cityFont == null)
-            // {
-            //     _cityFont = new Font(FontFamily, boxHeight.Percent(80), FontStyle.Regular, GraphicsUnit.Pixel);
-            //     _smallCityFont = new Font(FontFamily, boxHeight.Percent(25), FontStyle.Regular, GraphicsUnit.Pixel);
-            // }
 
             var verticalGap = boxHeight.Percent(VerticalGapBetweenBoxesPercent);
 
@@ -147,10 +141,6 @@ namespace ScreenSaver
 
         private void DrawBox(Rectangle box)
         {
-            // Alternative, simple way to draw box
-            // Gfx.FillRectangle(backFillTop, box.X, box.Y, box.Width, box.Height / 2);
-            // Gfx.FillRectangle(backFillBottom, box.X, box.Y + (box.Height / 2), box.Width, box.Height / 2);
-
             var radius = box.Height / 20;
 
             var path = RoundedRectangle.Create(box, radius);
@@ -185,7 +175,12 @@ namespace ScreenSaver
         private void DrawString(string s, Font font, Rectangle box)
         {
             var stringFormat = new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center };
-            Gfx.DrawString(s, font, FontBrush, box, stringFormat);
+
+            // Hacky adjustment to center the text in the box
+            var yOffset = box.Height.Percent(5);
+
+            var textRect = new Rectangle(box.X, box.Y + yOffset, box.Width, box.Height);
+            Gfx.DrawString(s, font, FontBrush, textRect, stringFormat);
         }
 
         private int CalcSize(int itemCount, int itemSize, int gapSize)

@@ -48,6 +48,14 @@ namespace ScreenSaver
             }
         }
 
+        // Experimental
+        protected int GetFontAscentPercent()
+        {
+            var ascent = FontFamily.GetCellAscent(FontStyle.Regular);
+            var all =  FontFamily.GetEmHeight(FontStyle.Regular);
+            return ascent * 100 / all;
+        }
+        
         private PrivateFontCollection InitFontCollection()
         {
             // We don't add both fonts at the same time because I can only get the private font collection
@@ -61,11 +69,10 @@ namespace ScreenSaver
             return pfc;
         }
         
-        protected static readonly Color BackColorTop = Color.FromArgb(255, 15, 15, 15);
+        protected static readonly Color BackColorTop = Color.FromArgb(255, 18, 18, 18);
         protected static readonly Color BackColorBottom = Color.FromArgb(255, 10, 10, 10);
         protected static readonly Brush FontBrush = new SolidBrush(Color.FromArgb(255, 183, 183, 183));
         
-
         protected static void AddFont(PrivateFontCollection pfc, byte[] fontResource)
         {
             IntPtr ptr = Marshal.AllocCoTaskMem(fontResource.Length);  // create an unsafe memory block for the font data

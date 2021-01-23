@@ -130,7 +130,7 @@ namespace ScreenSaver
                 {
                     if (_isPreviewMode || _screenSetting.DisplayType == DisplayType.CurrentTime)
                     {
-                        _timeScreen = new CurrentTimeScreen(this, _display24HourTime, _isPreviewMode, _fontSize);
+                        _timeScreen = new CurrentTimeScreen(this, _display24HourTime, _isPreviewMode, 70);
 					}
                     else if (_screenSetting.DisplayType == DisplayType.WorldTime)
                     {
