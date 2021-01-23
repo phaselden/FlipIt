@@ -355,7 +355,7 @@ namespace ScreenSaver
 			{
 				city.RefreshTime(SystemTime.Now);
 				var s = city.DisplayName.PadRight(maxNameLengthInChars + 2) + FormatTime(city, _cityDisplayDstIndicatorStyle == DstIndicatorStyle.DstAsAsterisk);
-				DrawString(startingX, y, boxSize, horizontalGap, s, city, _cityDisplayDstIndicatorStyle);
+				DrawCityRow(startingX, y, boxSize, horizontalGap, s, city, _cityDisplayDstIndicatorStyle);
 				y += boxHeight + verticalGap;
 			}
 		}
@@ -397,12 +397,12 @@ namespace ScreenSaver
 			return result;
 		}
 
-		private void DrawString(int x, int y, Size boxSize, int horizontalGap, string s, City city, DstIndicatorStyle dstIndicatorStyle)
+		private void DrawCityRow(int x, int y, Size boxSize, int horizontalGap, string s, City city, DstIndicatorStyle dstIndicatorStyle)
 		{
 			var boxRectangle = new Rectangle(new Point(x, y), boxSize);
 			foreach (var c in s.ToUpperInvariant())
 			{
-				DrawCharInBox(boxRectangle, c);
+				DrawCityRowCharInBox(boxRectangle, c);
 				boxRectangle.X = boxRectangle.Right + horizontalGap;
 			}
 
@@ -410,48 +410,48 @@ namespace ScreenSaver
 			{
 				if (city.IsDaylightSavingTime || city.DaysDifference != 0)
 				{
-					DrawSmallStringsInBox(boxRectangle, 
+					DrawCityRowSmallStringsInBox(boxRectangle, 
 						city.IsDaylightSavingTime ? "DST" : null,
 						city.DaysDifference != 0 ? $"{city.DaysDifference:+#;-#}d" : null);
 				}
 				else
 				{
-					DrawCharInBox(boxRectangle, ' ');
+					DrawCityRowCharInBox(boxRectangle, ' ');
 				}
 			}
 			else
 			{
-				DrawStringInBoxes(boxRectangle, horizontalGap,
+				DrawCityRowStringInBoxes(boxRectangle, horizontalGap,
 					city.DaysDifference != 0 
 						? " " + city.CurrentTime.ToString("ddd") 
 						: "    ");
 			}
 		}
 
-		private int DrawStringInBoxes(Rectangle boxRectangle, int horizontalGap, string s)
+		private int DrawCityRowStringInBoxes(Rectangle boxRectangle, int horizontalGap, string s)
 		{
 			foreach (var c in s.ToUpperInvariant())
 			{
-				DrawCharInBox(boxRectangle, c);
+				DrawCityRowCharInBox(boxRectangle, c);
 				boxRectangle.X = boxRectangle.Right + horizontalGap;
 			}
 			return boxRectangle.X;
 		}
 
-		private void DrawCharInBox(Rectangle boxRectangle, char theChar)
+		private void DrawCityRowCharInBox(Rectangle boxRectangle, char theChar)
 		{
 			DrawBox(boxRectangle);
 			DrawString(theChar.ToString(), _cityFont, boxRectangle);
-			DrawSplitter(boxRectangle);
+			DrawCityRowBoxSplitter(boxRectangle);
 		}
 		
-		private void DrawSmallStringsInBox(Rectangle boxRectangle, string top, string bottom)
+		private void DrawCityRowSmallStringsInBox(Rectangle boxRectangle, string top, string bottom)
 		{
 			DrawBox(boxRectangle, top, bottom);
-			DrawSplitter(boxRectangle);
+			DrawCityRowBoxSplitter(boxRectangle);
 		}
 
-		private void DrawSplitter(Rectangle box)
+		private void DrawCityRowBoxSplitter(Rectangle box)
 		{
 			var penY = box.Y + (box.Height/2) - (CityBoxSplitWidth/2);
 			Gfx.DrawLine(_smallSplitPen, box.Left, penY, box.Right + 1, penY);
