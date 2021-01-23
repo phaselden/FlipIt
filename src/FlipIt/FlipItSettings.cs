@@ -6,7 +6,7 @@ namespace ScreenSaver
     public class FlipItSettings
     {
         public bool Display24HrTime { get; set; }
-        public int Scale { get; set; }
+        public int Scale { get; set; } = 70;
 
         public List<ScreenSetting> ScreenSettings { get; set; } = new List<ScreenSetting>();
 

@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("Coming soon...");
+            System.Windows.Forms.ListViewItem listViewItem5 = new System.Windows.Forms.ListViewItem("Coming soon...");
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SettingsForm));
             this.okButton = new System.Windows.Forms.Button();
             this.cancelButton = new System.Windows.Forms.Button();
@@ -46,7 +46,12 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.label3 = new System.Windows.Forms.Label();
             this.githubLinkLabel = new System.Windows.Forms.LinkLabel();
+            this.scaleTrackBar = new System.Windows.Forms.TrackBar();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.scaleTrackBar)).BeginInit();
             this.SuspendLayout();
             // 
             // okButton
@@ -77,7 +82,7 @@
             // displayNothingRadioButton
             // 
             this.displayNothingRadioButton.AutoSize = true;
-            this.displayNothingRadioButton.Location = new System.Drawing.Point(136, 159);
+            this.displayNothingRadioButton.Location = new System.Drawing.Point(136, 195);
             this.displayNothingRadioButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.displayNothingRadioButton.Name = "displayNothingRadioButton";
             this.displayNothingRadioButton.Size = new System.Drawing.Size(73, 21);
@@ -90,7 +95,7 @@
             // displayCurrentTimeRadioButton
             // 
             this.displayCurrentTimeRadioButton.AutoSize = true;
-            this.displayCurrentTimeRadioButton.Location = new System.Drawing.Point(136, 188);
+            this.displayCurrentTimeRadioButton.Location = new System.Drawing.Point(136, 224);
             this.displayCurrentTimeRadioButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.displayCurrentTimeRadioButton.Name = "displayCurrentTimeRadioButton";
             this.displayCurrentTimeRadioButton.Size = new System.Drawing.Size(98, 21);
@@ -103,7 +108,7 @@
             // displayWorldTimesRadioButton
             // 
             this.displayWorldTimesRadioButton.AutoSize = true;
-            this.displayWorldTimesRadioButton.Location = new System.Drawing.Point(136, 217);
+            this.displayWorldTimesRadioButton.Location = new System.Drawing.Point(136, 253);
             this.displayWorldTimesRadioButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.displayWorldTimesRadioButton.Name = "displayWorldTimesRadioButton";
             this.displayWorldTimesRadioButton.Size = new System.Drawing.Size(99, 21);
@@ -119,8 +124,8 @@
             this.cityColumnHeader});
             this.worldTimesListView.HideSelection = false;
             this.worldTimesListView.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem2});
-            this.worldTimesListView.Location = new System.Drawing.Point(258, 217);
+            listViewItem5});
+            this.worldTimesListView.Location = new System.Drawing.Point(258, 253);
             this.worldTimesListView.Name = "worldTimesListView";
             this.worldTimesListView.Size = new System.Drawing.Size(260, 132);
             this.worldTimesListView.TabIndex = 11;
@@ -136,7 +141,7 @@
             // 
             this.mainListView.HideSelection = false;
             this.mainListView.LargeImageList = this.largeImageList;
-            this.mainListView.Location = new System.Drawing.Point(19, 121);
+            this.mainListView.Location = new System.Drawing.Point(19, 157);
             this.mainListView.MultiSelect = false;
             this.mainListView.Name = "mainListView";
             this.mainListView.Size = new System.Drawing.Size(91, 228);
@@ -153,7 +158,7 @@
             // display24hrRadioButton
             // 
             this.display24hrRadioButton.AutoSize = true;
-            this.display24hrRadioButton.Location = new System.Drawing.Point(115, 34);
+            this.display24hrRadioButton.Location = new System.Drawing.Point(145, 7);
             this.display24hrRadioButton.Name = "display24hrRadioButton";
             this.display24hrRadioButton.Size = new System.Drawing.Size(56, 21);
             this.display24hrRadioButton.TabIndex = 1;
@@ -165,7 +170,7 @@
             // display12hrRadioButton
             // 
             this.display12hrRadioButton.AutoSize = true;
-            this.display12hrRadioButton.Location = new System.Drawing.Point(115, 7);
+            this.display12hrRadioButton.Location = new System.Drawing.Point(73, 7);
             this.display12hrRadioButton.Name = "display12hrRadioButton";
             this.display12hrRadioButton.Size = new System.Drawing.Size(56, 21);
             this.display12hrRadioButton.TabIndex = 0;
@@ -177,7 +182,7 @@
             // selectedScreenNameLabel
             // 
             this.selectedScreenNameLabel.AutoSize = true;
-            this.selectedScreenNameLabel.Location = new System.Drawing.Point(133, 121);
+            this.selectedScreenNameLabel.Location = new System.Drawing.Point(133, 157);
             this.selectedScreenNameLabel.Name = "selectedScreenNameLabel";
             this.selectedScreenNameLabel.Size = new System.Drawing.Size(47, 17);
             this.selectedScreenNameLabel.TabIndex = 14;
@@ -188,24 +193,24 @@
             this.panel1.Controls.Add(this.label3);
             this.panel1.Controls.Add(this.display24hrRadioButton);
             this.panel1.Controls.Add(this.display12hrRadioButton);
-            this.panel1.Location = new System.Drawing.Point(12, 20);
+            this.panel1.Location = new System.Drawing.Point(47, 40);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(200, 61);
+            this.panel1.Size = new System.Drawing.Size(243, 40);
             this.panel1.TabIndex = 15;
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(8, 9);
+            this.label3.Location = new System.Drawing.Point(4, 9);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(84, 17);
+            this.label3.Size = new System.Drawing.Size(53, 17);
             this.label3.TabIndex = 2;
-            this.label3.Text = "Time display:";
+            this.label3.Text = "Display:";
             // 
             // githubLinkLabel
             // 
             this.githubLinkLabel.AutoSize = true;
-            this.githubLinkLabel.Location = new System.Drawing.Point(167, 395);
+            this.githubLinkLabel.Location = new System.Drawing.Point(167, 431);
             this.githubLinkLabel.Name = "githubLinkLabel";
             this.githubLinkLabel.Size = new System.Drawing.Size(212, 17);
             this.githubLinkLabel.TabIndex = 16;
@@ -213,13 +218,54 @@
             this.githubLinkLabel.Text = "https://github.com/phaselden/FlipIt";
             this.githubLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.githubLinkLabel_LinkClicked);
             // 
+            // scaleTrackBar
+            // 
+            this.scaleTrackBar.LargeChange = 1;
+            this.scaleTrackBar.Location = new System.Drawing.Point(111, 86);
+            this.scaleTrackBar.Name = "scaleTrackBar";
+            this.scaleTrackBar.Size = new System.Drawing.Size(170, 45);
+            this.scaleTrackBar.TabIndex = 17;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(51, 83);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(34, 17);
+            this.label1.TabIndex = 18;
+            this.label1.Text = "Size:";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(16, 20);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(89, 17);
+            this.label2.TabIndex = 19;
+            this.label2.Text = "Current Time";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.Location = new System.Drawing.Point(16, 137);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(54, 17);
+            this.label4.TabIndex = 20;
+            this.label4.Text = "Screens";
+            // 
             // SettingsForm
             // 
             this.AcceptButton = this.okButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.cancelButton;
-            this.ClientSize = new System.Drawing.Size(552, 424);
+            this.ClientSize = new System.Drawing.Size(552, 465);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.scaleTrackBar);
             this.Controls.Add(this.githubLinkLabel);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.selectedScreenNameLabel);
@@ -239,6 +285,7 @@
             this.Load += new System.EventHandler(this.SettingsForm_Load);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.scaleTrackBar)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -260,5 +307,9 @@
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.LinkLabel githubLinkLabel;
+        private System.Windows.Forms.TrackBar scaleTrackBar;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label4;
     }
 }

@@ -29,34 +29,30 @@ namespace ScreenSaver
 
         private TimeScreen _timeScreen;
 
-		private readonly bool _display24HourTime;
+		private readonly FlipItSettings _settings;
         private readonly ScreenSetting _screenSetting;
 		private Point _mouseLocation;
 		private readonly bool _isPreviewMode;
 		private readonly bool _showSeconds = false;
 		private int _lastMinute = -1;
 
-        private const int FontScaleFactor = 3;
-		private readonly int _fontSize = 350;
-		
-		public MainForm()
+        public MainForm()
 		{
 			InitializeComponent();
 		}
 
-		public MainForm(Rectangle bounds, bool display24HourTime, ScreenSetting screenSetting)
+		public MainForm(Rectangle bounds, FlipItSettings settings, ScreenSetting screenSetting)
 		{
-            _display24HourTime = display24HourTime;
+            _settings = settings;
             _screenSetting = screenSetting;
 			InitializeComponent();
 			Bounds = bounds;
-			_fontSize = bounds.Height / FontScaleFactor;
         }
 
-		public MainForm(IntPtr previewWndHandle, bool display24HourTime, ScreenSetting screenSetting)
+		public MainForm(IntPtr previewWndHandle, FlipItSettings settings, ScreenSetting screenSetting)
 		{
-            _display24HourTime = display24HourTime;
-            _screenSetting = screenSetting;
+			_settings = settings;
+			_screenSetting = screenSetting;
 
 			InitializeComponent();
 
@@ -70,9 +66,6 @@ namespace ScreenSaver
 			GetClientRect(previewWndHandle, out var parentRect);
 			Size = parentRect.Size;
 			Location = new Point(0, 0);
-
-			// Make text smaller for preview window
-			_fontSize = Size.Height / FontScaleFactor;
 
 			_isPreviewMode = true;
 		}
@@ -130,7 +123,7 @@ namespace ScreenSaver
                 {
                     if (_isPreviewMode || _screenSetting.DisplayType == DisplayType.CurrentTime)
                     {
-                        _timeScreen = new CurrentTimeScreen(this, _display24HourTime, _isPreviewMode, 70);
+                        _timeScreen = new CurrentTimeScreen(this, _settings.Display24HrTime, _isPreviewMode, _settings.Scale);
 					}
                     else if (_screenSetting.DisplayType == DisplayType.WorldTime)
                     {

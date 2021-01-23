@@ -31,6 +31,8 @@ namespace ScreenSaver
 
             var iniFile = new IniFile(iniFilePath);
             iniFile.WriteBool("General", "Display24Hr", _settings.Display24HrTime);
+            iniFile.WriteInt("General", "Scale", scaleTrackBar.Value * 10);
+
             foreach (var screenSetting in _settings.ScreenSettings)
             {
                 var sectionName = $"Screen {screenSetting.DeviceName}";
@@ -51,8 +53,6 @@ namespace ScreenSaver
 
         private void SettingsForm_Load(object sender, EventArgs e)
         {
-            mainListView.Items.Clear();
-
             if (_settings.Display24HrTime)
             {
                 display24hrRadioButton.Checked = true;
@@ -61,8 +61,11 @@ namespace ScreenSaver
             {
                 display12hrRadioButton.Checked = true;
             }
-            
-			foreach (var screen in _settings.ScreenSettings)
+
+            scaleTrackBar.Value = _settings.Scale / 10;
+
+            mainListView.Items.Clear();
+            foreach (var screen in _settings.ScreenSettings)
             {
                 var item = new ListViewItem(screen.ShortDescription)
                 {

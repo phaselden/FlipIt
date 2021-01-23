@@ -48,7 +48,7 @@ namespace ScreenSaver
 					}
 
 					IntPtr previewWndHandle = new IntPtr(long.Parse(secondArgument));
-					Application.Run(new MainForm(previewWndHandle, settings.Display24HrTime, settings.ScreenSettings[0]));
+					Application.Run(new MainForm(previewWndHandle, settings, settings.ScreenSettings[0]));
 				}
 				else if (firstArgument == "/s")      // Full-screen mode
 				{
@@ -77,7 +77,7 @@ namespace ScreenSaver
             {
                 var cleanDeviceName = CleanDeviceName(screen.DeviceName);
                 var screenSettings = settings.GetScreen(cleanDeviceName);
-				var form = new MainForm(screen.Bounds, settings.Display24HrTime, screenSettings);
+				var form = new MainForm(screen.Bounds, settings, screenSettings);
 				form.Show();
 			}
 		}
@@ -95,6 +95,7 @@ namespace ScreenSaver
             {
                 iniFile = new IniFile(iniFilePath);
                 settings.Display24HrTime = iniFile.ReadBool("General", "Display24Hr", false);
+                settings.Scale = iniFile.ReadInt("General", "Scale", 70);
             }
             else
             {
