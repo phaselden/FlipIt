@@ -1,7 +1,6 @@
 ﻿/* Originally based on project by Frank McCown in 2010 */
 
 using System;
-using System.IO;
 using System.Windows.Forms;
 
 namespace ScreenSaver
@@ -17,7 +16,7 @@ namespace ScreenSaver
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
 
-            var settings = LoadSettings();
+            var settings = FlipItSettings.Load(Screen.AllScreens);
 
 			if (args.Length > 0)
 			{
@@ -75,58 +74,10 @@ namespace ScreenSaver
         {
 			foreach (var screen in Screen.AllScreens)
             {
-                var cleanDeviceName = CleanDeviceName(screen.DeviceName);
-                var screenSettings = settings.GetScreen(cleanDeviceName);
+                var screenSettings = settings.GetScreen(screen.DeviceName);
 				var form = new MainForm(screen.Bounds, settings, screenSettings);
 				form.Show();
 			}
 		}
-
-        private static FlipItSettings LoadSettings()
-        {
-            var allScreens = Screen.AllScreens;
-			IniFile iniFile = null;
-
-			var settings = new FlipItSettings();
-
-			var settingsFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "FlipIt");
-			var iniFilePath = Path.Combine(settingsFolder, "Settings.ini");
-            if (File.Exists(iniFilePath))
-            {
-                iniFile = new IniFile(iniFilePath);
-                settings.Display24HrTime = iniFile.ReadBool("General", "Display24Hr", false);
-                settings.Scale = iniFile.ReadInt("General", "Scale", 70);
-            }
-            else
-            {
-                settings.Display24HrTime = false;
-            }
-
-            var screenNum = 0;
-			foreach (var screen in allScreens)
-            {
-                screenNum++;
-                var cleanDeviceName = CleanDeviceName(screen.DeviceName);
-		        var sectionName = $"Screen {cleanDeviceName}";
-		    
-                var screenSetting = new ScreenSetting(screenNum, cleanDeviceName, screen.Bounds.Width, screen.Bounds.Height);
-                if (iniFile != null && iniFile.SectionExists(sectionName))
-                {
-                    screenSetting.DisplayType = (DisplayType) iniFile.ReadInt(sectionName, "DisplayType", (int) DisplayType.CurrentTime);
-                }
-                else
-                {
-                    screenSetting.DisplayType = DisplayType.CurrentTime;
-                }
-                settings.ScreenSettings.Add(screenSetting);
-            }
-			
-			return settings;
-        }
-
-        private static string CleanDeviceName(string deviceName)
-        {
-            return deviceName.TrimStart(new[] {'\\', '.'});
-        }
     }
 }

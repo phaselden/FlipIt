@@ -8,7 +8,7 @@ namespace ScreenSaver
 {
     internal class WorldTimesScreen : TimeScreen
     {
-        private readonly List<City> _cities;
+        private readonly List<Location> _cities;
 
         private readonly Pen _smallSplitPen = new Pen(Color.Black, SplitWidth);
         private readonly Brush _backFillTop = new SolidBrush(BackColorBottom);
@@ -29,7 +29,7 @@ namespace ScreenSaver
         private const int VerticalGapBetweenBoxesPercent = 10;
         private const int TimeLengthInChars = 9;
 
-        public WorldTimesScreen(List<City> cities, Form form)
+        public WorldTimesScreen(List<Location> cities, Form form)
         {
             _cities = cities;
             _form = form;
@@ -79,7 +79,7 @@ namespace ScreenSaver
             }
         }
 
-        private void DrawRow(int x, int y, Size boxSize, int horizontalGap, string s, City city, DstIndicatorStyle dstIndicatorStyle)
+        private void DrawRow(int x, int y, Size boxSize, int horizontalGap, string s, Location location, DstIndicatorStyle dstIndicatorStyle)
         {
             var boxRectangle = new Rectangle(new Point(x, y), boxSize);
             foreach (var c in s.ToUpperInvariant())
@@ -90,11 +90,11 @@ namespace ScreenSaver
 
             if (dstIndicatorStyle == DstIndicatorStyle.SmallDst)
             {
-                if (city.IsDaylightSavingTime || city.DaysDifference != 0)
+                if (location.IsDaylightSavingTime || location.DaysDifference != 0)
                 {
                     DrawSmallStringsInBox(boxRectangle,
-                        city.IsDaylightSavingTime ? "DST" : null,
-                        city.DaysDifference != 0 ? $"{city.DaysDifference:+#;-#}d" : null);
+                        location.IsDaylightSavingTime ? "DST" : null,
+                        location.DaysDifference != 0 ? $"{location.DaysDifference:+#;-#}d" : null);
                 }
                 else
                 {
@@ -104,8 +104,8 @@ namespace ScreenSaver
             else
             {
                 DrawStringInBoxes(boxRectangle, horizontalGap,
-                    city.DaysDifference != 0
-                        ? " " + city.CurrentTime.ToString("ddd")
+                    location.DaysDifference != 0
+                        ? " " + location.CurrentTime.ToString("ddd")
                         : "    ");
             }
         }
@@ -188,10 +188,10 @@ namespace ScreenSaver
             return (itemCount * (itemSize + gapSize)) - gapSize;
         }
 
-        private string FormatTime(City city, bool appendAsteriskIfDst)
+        private string FormatTime(Location location, bool appendAsteriskIfDst)
         {
-            var suffix = appendAsteriskIfDst && city.IsDaylightSavingTime ? "*" : " ";
-            var result = $"{city.CurrentTime:h:mm tt}{suffix}";
+            var suffix = appendAsteriskIfDst && location.IsDaylightSavingTime ? "*" : " ";
+            var result = $"{location.CurrentTime:h:mm tt}{suffix}";
             return $"{result,TimeLengthInChars}";  // right aligned in 9 chars
         }
 

@@ -11,8 +11,8 @@ namespace ScreenSaver
     {
         protected Form _form;
         private Graphics _graphics;
-        private PrivateFontCollection _pfc;
-        private FontFamily _fontFamily;
+        private PrivateFontCollection _pfc = null;
+        private FontFamily _fontFamily = null;
 
         protected abstract byte[] GetFontResource();
 

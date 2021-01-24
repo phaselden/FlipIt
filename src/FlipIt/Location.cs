@@ -2,21 +2,21 @@
 
 namespace ScreenSaver
 {
-    internal class City
+    public class Location
     {
-        public City(string timeZoneID, string displayName)
+        public Location(string timeZoneID, string displayName)
         {
             DisplayName = displayName;
             TimeZoneID = timeZoneID;
         }
 
-        internal string DisplayName { get; }
-        internal string TimeZoneID { get; }
-        internal DateTime CurrentTime { get; private set; }
-        internal bool IsDaylightSavingTime { get; private set; }
-        internal int DaysDifference { get; private set; }
+        public string DisplayName { get; }
+        public string TimeZoneID { get; }
+        public DateTime CurrentTime { get; private set; }
+        public bool IsDaylightSavingTime { get; private set; }
+        public int DaysDifference { get; private set; }
 
-        internal void RefreshTime(DateTime now)
+        public void RefreshTime(DateTime now)
         {
             var timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(TimeZoneID);
             CurrentTime = TimeZoneInfo.ConvertTime(now, TimeZoneInfo.Local, timeZoneInfo);

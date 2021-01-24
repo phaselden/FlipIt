@@ -64,12 +64,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="City.cs" />
+    <Compile Include="IniFile.cs" />
+    <Compile Include="Location.cs" />
     <Compile Include="CurrentTimeScreen.cs" />
     <Compile Include="DisplayType.cs" />
     <Compile Include="DstIndicatorStyle.cs" />
     <Compile Include="FlipItSettings.cs" />
-    <Compile Include="IniFile.cs" />
     <Compile Include="Int32Extensions.cs" />
     <Compile Include="RoundedRectangle.cs" />
     <Compile Include="TimeScreen.cs" />

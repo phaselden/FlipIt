@@ -1,4 +1,6 @@
-﻿namespace ScreenSaver
+﻿using System.Collections.Generic;
+
+namespace ScreenSaver
 {
     public class ScreenSetting
     {
@@ -19,5 +21,7 @@
 
         public string ShortDescription => $"Screen {ScreenNumber}";
         public string Description => $"{ShortDescription} - {Width} x {Height}";
+
+        public List<Location> Locations { get; set; } = new List<Location>();
     }
 }

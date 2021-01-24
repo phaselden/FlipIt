@@ -127,9 +127,10 @@ namespace ScreenSaver
 					}
                     else if (_screenSetting.DisplayType == DisplayType.WorldTime)
                     {
-                        var cities = GetCities();
-                        _timeScreen = new WorldTimesScreen(cities, this);
-					}
+                        _timeScreen = _screenSetting.Locations.Count > 0 
+                            ? new WorldTimesScreen(_screenSetting.Locations, this) 
+                            : new WorldTimesScreen(GetDefaultLocations(), this);
+                    }
                     else
                     {
                         throw new NotImplementedException("Unhandled state: " + _screenSetting.DisplayType);
@@ -143,27 +144,24 @@ namespace ScreenSaver
 			}
 		}
 		
-		private List<City> GetCities()
+		private List<Location> GetDefaultLocations()
 		{
-			var result = new List<City>();
+			var result = new List<Location>();
 			
-			result.Add(new City("Pacific Standard Time", "Los Angeles"));
-			
-			//return result;  // uncomment to testing one item
-			
-			result.Add(new City("Eastern Standard Time", "New York (EST)"));
-			result.Add(new City("E. Australia Standard Time", "Brisbane"));
-			result.Add(new City("New Zealand Standard Time", "Wellington"));
-			result.Add(new City("SE Asia Standard Time", "Hanoi"));
-			//result.Add(new City("AUS Eastern Standard Time", "Melbourne"));
-			result.Add(new City("UTC", "UTC"));
-			//result.Add(new City("W. Australia Standard Time", "Perth"));
-			//result.Add(new City("Pakistan Standard Time", "Islamabad"));
-			//result.Add(new City("Israel Standard Time", "Jerusalem"));
-			result.Add(new City("GMT Standard Time", "London"));
-			result.Add(new City("W. Europe Standard Time", "Stockholm"));
-			result.Add(new City("Romance Standard Time", "Paris"));
-			result.Add(new City("Hawaiian Standard Time", "Hawaii"));
+			result.Add(new Location("Pacific Standard Time", "Los Angeles"));
+			result.Add(new Location("Eastern Standard Time", "New York (EST)"));
+			result.Add(new Location("E. Australia Standard Time", "Brisbane"));
+			result.Add(new Location("New Zealand Standard Time", "Wellington"));
+			// result.Add(new Location("SE Asia Standard Time", "Hanoi"));
+			result.Add(new Location("AUS Eastern Standard Time", "Melbourne"));
+			result.Add(new Location("UTC", "UTC"));
+			//result.Add(new Location("W. Australia Standard Time", "Perth"));
+			//result.Add(new Location("Pakistan Standard Time", "Islamabad"));
+			//result.Add(new Location("Israel Standard Time", "Jerusalem"));
+			result.Add(new Location("GMT Standard Time", "London"));
+			//result.Add(new Location("W. Europe Standard Time", "Stockholm"));
+			result.Add(new Location("Romance Standard Time", "Paris"));
+			result.Add(new Location("Hawaiian Standard Time", "Hawaii"));
 			
 			return result;
 		}
@@ -208,7 +206,10 @@ namespace ScreenSaver
 
         private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
         {
-            _timeScreen.DisposeResources();
+            if (_timeScreen != null)
+            {
+                _timeScreen.DisposeResources();
+            }
         }
     }
 }

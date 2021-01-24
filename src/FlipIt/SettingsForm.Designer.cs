@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.ListViewItem listViewItem5 = new System.Windows.Forms.ListViewItem("Coming soon...");
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SettingsForm));
             this.okButton = new System.Windows.Forms.Button();
             this.cancelButton = new System.Windows.Forms.Button();
@@ -50,6 +49,10 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
+            this.addLocationButton = new System.Windows.Forms.Button();
+            this.removeLocationButton = new System.Windows.Forms.Button();
+            this.locationComboBox = new System.Windows.Forms.ComboBox();
+            this.editLocationButton = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.scaleTrackBar)).BeginInit();
             this.SuspendLayout();
@@ -57,7 +60,7 @@
             // okButton
             // 
             this.okButton.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.okButton.Location = new System.Drawing.Point(453, 13);
+            this.okButton.Location = new System.Drawing.Point(478, 13);
             this.okButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.okButton.Name = "okButton";
             this.okButton.Size = new System.Drawing.Size(87, 30);
@@ -69,8 +72,8 @@
             // cancelButton
             // 
             this.cancelButton.CausesValidation = false;
-            this.cancelButton.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.cancelButton.Location = new System.Drawing.Point(453, 51);
+            this.cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.cancelButton.Location = new System.Drawing.Point(478, 51);
             this.cancelButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.cancelButton.Name = "cancelButton";
             this.cancelButton.Size = new System.Drawing.Size(87, 30);
@@ -82,7 +85,7 @@
             // displayNothingRadioButton
             // 
             this.displayNothingRadioButton.AutoSize = true;
-            this.displayNothingRadioButton.Location = new System.Drawing.Point(136, 195);
+            this.displayNothingRadioButton.Location = new System.Drawing.Point(136, 187);
             this.displayNothingRadioButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.displayNothingRadioButton.Name = "displayNothingRadioButton";
             this.displayNothingRadioButton.Size = new System.Drawing.Size(73, 21);
@@ -95,7 +98,7 @@
             // displayCurrentTimeRadioButton
             // 
             this.displayCurrentTimeRadioButton.AutoSize = true;
-            this.displayCurrentTimeRadioButton.Location = new System.Drawing.Point(136, 224);
+            this.displayCurrentTimeRadioButton.Location = new System.Drawing.Point(136, 216);
             this.displayCurrentTimeRadioButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.displayCurrentTimeRadioButton.Name = "displayCurrentTimeRadioButton";
             this.displayCurrentTimeRadioButton.Size = new System.Drawing.Size(98, 21);
@@ -108,7 +111,7 @@
             // displayWorldTimesRadioButton
             // 
             this.displayWorldTimesRadioButton.AutoSize = true;
-            this.displayWorldTimesRadioButton.Location = new System.Drawing.Point(136, 253);
+            this.displayWorldTimesRadioButton.Location = new System.Drawing.Point(136, 245);
             this.displayWorldTimesRadioButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.displayWorldTimesRadioButton.Name = "displayWorldTimesRadioButton";
             this.displayWorldTimesRadioButton.Size = new System.Drawing.Size(99, 21);
@@ -122,20 +125,23 @@
             // 
             this.worldTimesListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.cityColumnHeader});
+            this.worldTimesListView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
             this.worldTimesListView.HideSelection = false;
-            this.worldTimesListView.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem5});
-            this.worldTimesListView.Location = new System.Drawing.Point(258, 253);
+            this.worldTimesListView.LabelEdit = true;
+            this.worldTimesListView.Location = new System.Drawing.Point(241, 245);
+            this.worldTimesListView.MultiSelect = false;
             this.worldTimesListView.Name = "worldTimesListView";
-            this.worldTimesListView.Size = new System.Drawing.Size(260, 132);
+            this.worldTimesListView.Size = new System.Drawing.Size(231, 141);
             this.worldTimesListView.TabIndex = 11;
             this.worldTimesListView.UseCompatibleStateImageBehavior = false;
             this.worldTimesListView.View = System.Windows.Forms.View.Details;
+            this.worldTimesListView.AfterLabelEdit += new System.Windows.Forms.LabelEditEventHandler(this.worldTimesListView_AfterLabelEdit);
+            this.worldTimesListView.SelectedIndexChanged += new System.EventHandler(this.worldTimesListView_SelectedIndexChanged);
             // 
             // cityColumnHeader
             // 
-            this.cityColumnHeader.Text = "City";
-            this.cityColumnHeader.Width = 256;
+            this.cityColumnHeader.Text = "Location";
+            this.cityColumnHeader.Width = 202;
             // 
             // mainListView
             // 
@@ -144,7 +150,7 @@
             this.mainListView.Location = new System.Drawing.Point(19, 157);
             this.mainListView.MultiSelect = false;
             this.mainListView.Name = "mainListView";
-            this.mainListView.Size = new System.Drawing.Size(91, 228);
+            this.mainListView.Size = new System.Drawing.Size(91, 260);
             this.mainListView.TabIndex = 12;
             this.mainListView.UseCompatibleStateImageBehavior = false;
             this.mainListView.SelectedIndexChanged += new System.EventHandler(this.mainListView_SelectedIndexChanged);
@@ -210,7 +216,7 @@
             // githubLinkLabel
             // 
             this.githubLinkLabel.AutoSize = true;
-            this.githubLinkLabel.Location = new System.Drawing.Point(167, 431);
+            this.githubLinkLabel.Location = new System.Drawing.Point(165, 454);
             this.githubLinkLabel.Name = "githubLinkLabel";
             this.githubLinkLabel.Size = new System.Drawing.Size(212, 17);
             this.githubLinkLabel.TabIndex = 16;
@@ -255,13 +261,65 @@
             this.label4.TabIndex = 20;
             this.label4.Text = "Screens";
             // 
+            // addLocationButton
+            // 
+            this.addLocationButton.CausesValidation = false;
+            this.addLocationButton.Location = new System.Drawing.Point(478, 388);
+            this.addLocationButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.addLocationButton.Name = "addLocationButton";
+            this.addLocationButton.Size = new System.Drawing.Size(87, 30);
+            this.addLocationButton.TabIndex = 21;
+            this.addLocationButton.Text = "Add...";
+            this.addLocationButton.UseVisualStyleBackColor = true;
+            this.addLocationButton.Click += new System.EventHandler(this.addLocationButton_Click);
+            // 
+            // removeLocationButton
+            // 
+            this.removeLocationButton.CausesValidation = false;
+            this.removeLocationButton.Location = new System.Drawing.Point(478, 317);
+            this.removeLocationButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.removeLocationButton.Name = "removeLocationButton";
+            this.removeLocationButton.Size = new System.Drawing.Size(87, 30);
+            this.removeLocationButton.TabIndex = 22;
+            this.removeLocationButton.Text = "Remove";
+            this.removeLocationButton.UseVisualStyleBackColor = true;
+            this.removeLocationButton.Click += new System.EventHandler(this.removeLocationButton_Click);
+            // 
+            // locationComboBox
+            // 
+            this.locationComboBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.locationComboBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.locationComboBox.DisplayMember = "DisplayName";
+            this.locationComboBox.FormattingEnabled = true;
+            this.locationComboBox.Location = new System.Drawing.Point(241, 392);
+            this.locationComboBox.Name = "locationComboBox";
+            this.locationComboBox.Size = new System.Drawing.Size(231, 25);
+            this.locationComboBox.Sorted = true;
+            this.locationComboBox.TabIndex = 23;
+            this.locationComboBox.SelectedIndexChanged += new System.EventHandler(this.locationComboBox_SelectedIndexChanged);
+            this.locationComboBox.Enter += new System.EventHandler(this.locationComboBox_Enter);
+            // 
+            // editLocationButton
+            // 
+            this.editLocationButton.CausesValidation = false;
+            this.editLocationButton.Location = new System.Drawing.Point(478, 279);
+            this.editLocationButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.editLocationButton.Name = "editLocationButton";
+            this.editLocationButton.Size = new System.Drawing.Size(87, 30);
+            this.editLocationButton.TabIndex = 24;
+            this.editLocationButton.Text = "Edit";
+            this.editLocationButton.UseVisualStyleBackColor = true;
+            this.editLocationButton.Click += new System.EventHandler(this.editLocationButton_Click);
+            // 
             // SettingsForm
             // 
-            this.AcceptButton = this.okButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.CancelButton = this.cancelButton;
-            this.ClientSize = new System.Drawing.Size(552, 465);
+            this.ClientSize = new System.Drawing.Size(577, 480);
+            this.Controls.Add(this.editLocationButton);
+            this.Controls.Add(this.locationComboBox);
+            this.Controls.Add(this.removeLocationButton);
+            this.Controls.Add(this.addLocationButton);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
@@ -311,5 +369,9 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Button addLocationButton;
+        private System.Windows.Forms.Button removeLocationButton;
+        private System.Windows.Forms.ComboBox locationComboBox;
+        private System.Windows.Forms.Button editLocationButton;
     }
 }

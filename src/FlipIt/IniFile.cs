@@ -1,98 +1,155 @@
-﻿// Initially from https://stackoverflow.com/a/14906422/1899
-
-using System;
-using System.Diagnostics;
-using System.Runtime.InteropServices;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace ScreenSaver
 {
-    public class IniFile 
+    public class IniFile
     {
-        private const int BufferSize = 1024;
-        private readonly string _path;
+        private readonly string _iniFilePath;
+        private readonly List<Entry> _entries = new List<Entry>();
         
-        [DllImport("kernel32", CharSet = CharSet.Unicode)]
-        static extern long WritePrivateProfileString(string section, string key, string value, string filePath);
+        private class Entry
+        {
+            public Entry(string section, string key, string value)
+            {
+                Section = section;
+                Key = key;
+                Value = value;
+            }
 
-        [DllImport("kernel32", CharSet = CharSet.Unicode)]
-        static extern int GetPrivateProfileString(string section, string key, string @default, StringBuilder retVal, int size, string filePath);
+            public string Section { get; }
+            public string Key { get; }
+            public string Value { get; set; }
+        }
 
         public IniFile(string iniPath)
         {
-            _path = iniPath;
-        }
+            _iniFilePath = iniPath;
 
-        public string ReadString(string section, string key)
-        {
-            var retVal = new StringBuilder(BufferSize);
-            GetPrivateProfileString(section, key, "", retVal, BufferSize, _path);
-            return retVal.ToString();
-        }
+            string currentSection = null;
 
-        public void WriteBool(string section, string key, bool value)
-        {
-            WriteString(section, key, value ? "1": "0");
-        }
+            var lines = File.ReadAllLines(iniPath);
+            foreach (var rawLine in lines)
+            {
+                var line = rawLine.Trim();
+                if (line == "")
+                    continue;
+                if (line.StartsWith("[") && line.EndsWith("]"))
+                {
+                    currentSection = line.Substring(1, line.Length - 2);
+                }
+                else
+                {
+                    var keyPair = line.Split(new char[] {'='}, 2);
+                    if (keyPair.Length < 2)
+                    {
+                        // it could be a comment
+                        continue;
+                    }
 
-        public bool ReadBool(string section, string key, bool defaultValue)
-        {
-            var val = ReadString(section, key);
-            if (val == "")
-                return defaultValue;
-            Debug.Assert(val == "1" || val == "0");
-            return val == "1";
-        }
-        
-        public int ReadInt(string section, string key, int defaultValue)
-        {
-            var val = ReadString(section, key);
-            if (val == "")
-                return defaultValue;
-            return Int32.Parse(val);
-        }
+                    if (currentSection == null)
+                    {
+                        currentSection = "ROOT";
+                    }
 
-        public void WriteInt(string section, string key, int value)
-        {
-            WriteString(section, key, value.ToString());
-        }
-
-        public string[] ReadSections()
-        {
-            var keyNames = ReadString(null, null);
-            return keyNames.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+                    var entry = new Entry(currentSection, keyPair[0], keyPair[1]);
+                    _entries.Add(entry);
+                }
+            }
         }
 
         public bool SectionExists(string section)
         {
-            var keyNames = ReadSection(section);
-            return keyNames.Length > 0;
+            return _entries.Exists(e => e.Section == section);
         }
 
-        public string[] ReadSection(string section)
+        public string[] GetKeys(string section)
         {
-            var keyNames = ReadString(section, null);
-            return keyNames.Split(new []{'\n'}, StringSplitOptions.RemoveEmptyEntries);
+            return _entries.Where(e => e.Section == section).Select(e => e.Key).ToArray();
         }
 
-        public void WriteString(string section, string key, string value)
+        public void DeleteSection(string section)
         {
-            WritePrivateProfileString(section, key, value, _path);
+            _entries.RemoveAll(e => e.Section == section);
         }
 
-        public void DeleteKey(string section, string key)
+        public string GetString(string section, string key)
         {
-            WriteString(section, key, null);
+            return GetEntry(section, key)?.Value;
         }
 
-        public void DeleteSection(string section = null)
+        public int GetInt(string section, string key, int defaultValue)
         {
-            WriteString(section, null, null);
+            var value = GetString(section, key);
+            return value != null ? Convert.ToInt32(value) : defaultValue ;
         }
 
-        public bool KeyExists(string key, string section = null)
+        public bool GetBool(string section, string key, bool defaultValue)
         {
-            return ReadString(section, key).Length > 0;
+            var value = GetInt(section, key, defaultValue ? 1 : 0);
+            return value == 1;
+        }
+
+        public void SetString(string section, string key, string value)
+        {
+            var entry = GetEntry(section, key);
+            if (entry != null)
+            {
+                entry.Value = value;
+            }
+            else
+            {
+                _entries.Add(new Entry(section, key, value));
+            }
+        }
+
+        public void SetBool(string section, string key, bool value)
+        {
+            SetString(section, key, value ? "1" : "0");
+        }
+
+        public void SetInt(string section, string key, int value)
+        {
+            SetString(section, key, value.ToString());
+        }
+
+        private Entry GetEntry(string section, string key)
+        {
+            return _entries.SingleOrDefault(e => e.Section == section && e.Key == key);
+        }
+
+        public void DeleteKey(String section, String key)
+        {
+            _entries.RemoveAll(e => e.Section == section && e.Key == key);
+        }
+
+        public void Save(string filePath)
+        {
+            var sb = new StringBuilder();
+            var sectionNames = _entries.Select(e => e.Section).Distinct();
+            foreach (var section in sectionNames)
+            {
+                sb.AppendLine($"[{section}]");
+
+                var sectionEntries = _entries.Where(e => e.Section == section);
+                foreach (var entry in sectionEntries)
+                {
+                    if (entry.Value == null)
+                        continue;
+                    
+                    sb.AppendLine($"{entry.Key}={entry.Value}");
+                }
+                sb.AppendLine();
+            }
+            File.WriteAllText(filePath, sb.ToString());
+        }
+
+        public void Save()
+        {
+            Save(_iniFilePath);
         }
     }
 }
