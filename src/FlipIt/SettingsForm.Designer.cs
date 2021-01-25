@@ -37,7 +37,6 @@
             this.displayWorldTimesRadioButton = new System.Windows.Forms.RadioButton();
             this.worldTimesListView = new System.Windows.Forms.ListView();
             this.cityColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.mainListView = new System.Windows.Forms.ListView();
             this.largeImageList = new System.Windows.Forms.ImageList(this.components);
             this.display24hrRadioButton = new System.Windows.Forms.RadioButton();
             this.display12hrRadioButton = new System.Windows.Forms.RadioButton();
@@ -53,6 +52,7 @@
             this.removeLocationButton = new System.Windows.Forms.Button();
             this.locationComboBox = new System.Windows.Forms.ComboBox();
             this.editLocationButton = new System.Windows.Forms.Button();
+            this.screensListBox = new System.Windows.Forms.ListBox();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.scaleTrackBar)).BeginInit();
             this.SuspendLayout();
@@ -85,7 +85,7 @@
             // displayNothingRadioButton
             // 
             this.displayNothingRadioButton.AutoSize = true;
-            this.displayNothingRadioButton.Location = new System.Drawing.Point(136, 187);
+            this.displayNothingRadioButton.Location = new System.Drawing.Point(120, 187);
             this.displayNothingRadioButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.displayNothingRadioButton.Name = "displayNothingRadioButton";
             this.displayNothingRadioButton.Size = new System.Drawing.Size(73, 21);
@@ -98,7 +98,7 @@
             // displayCurrentTimeRadioButton
             // 
             this.displayCurrentTimeRadioButton.AutoSize = true;
-            this.displayCurrentTimeRadioButton.Location = new System.Drawing.Point(136, 216);
+            this.displayCurrentTimeRadioButton.Location = new System.Drawing.Point(120, 216);
             this.displayCurrentTimeRadioButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.displayCurrentTimeRadioButton.Name = "displayCurrentTimeRadioButton";
             this.displayCurrentTimeRadioButton.Size = new System.Drawing.Size(98, 21);
@@ -111,7 +111,7 @@
             // displayWorldTimesRadioButton
             // 
             this.displayWorldTimesRadioButton.AutoSize = true;
-            this.displayWorldTimesRadioButton.Location = new System.Drawing.Point(136, 245);
+            this.displayWorldTimesRadioButton.Location = new System.Drawing.Point(120, 245);
             this.displayWorldTimesRadioButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.displayWorldTimesRadioButton.Name = "displayWorldTimesRadioButton";
             this.displayWorldTimesRadioButton.Size = new System.Drawing.Size(99, 21);
@@ -128,10 +128,10 @@
             this.worldTimesListView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
             this.worldTimesListView.HideSelection = false;
             this.worldTimesListView.LabelEdit = true;
-            this.worldTimesListView.Location = new System.Drawing.Point(241, 245);
+            this.worldTimesListView.Location = new System.Drawing.Point(225, 245);
             this.worldTimesListView.MultiSelect = false;
             this.worldTimesListView.Name = "worldTimesListView";
-            this.worldTimesListView.Size = new System.Drawing.Size(231, 141);
+            this.worldTimesListView.Size = new System.Drawing.Size(247, 145);
             this.worldTimesListView.TabIndex = 11;
             this.worldTimesListView.UseCompatibleStateImageBehavior = false;
             this.worldTimesListView.View = System.Windows.Forms.View.Details;
@@ -142,18 +142,6 @@
             // 
             this.cityColumnHeader.Text = "Location";
             this.cityColumnHeader.Width = 202;
-            // 
-            // mainListView
-            // 
-            this.mainListView.HideSelection = false;
-            this.mainListView.LargeImageList = this.largeImageList;
-            this.mainListView.Location = new System.Drawing.Point(19, 157);
-            this.mainListView.MultiSelect = false;
-            this.mainListView.Name = "mainListView";
-            this.mainListView.Size = new System.Drawing.Size(91, 260);
-            this.mainListView.TabIndex = 12;
-            this.mainListView.UseCompatibleStateImageBehavior = false;
-            this.mainListView.SelectedIndexChanged += new System.EventHandler(this.mainListView_SelectedIndexChanged);
             // 
             // largeImageList
             // 
@@ -188,7 +176,7 @@
             // selectedScreenNameLabel
             // 
             this.selectedScreenNameLabel.AutoSize = true;
-            this.selectedScreenNameLabel.Location = new System.Drawing.Point(133, 157);
+            this.selectedScreenNameLabel.Location = new System.Drawing.Point(117, 157);
             this.selectedScreenNameLabel.Name = "selectedScreenNameLabel";
             this.selectedScreenNameLabel.Size = new System.Drawing.Size(47, 17);
             this.selectedScreenNameLabel.TabIndex = 14;
@@ -255,7 +243,7 @@
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(16, 137);
+            this.label4.Location = new System.Drawing.Point(16, 130);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(54, 17);
             this.label4.TabIndex = 20;
@@ -264,7 +252,7 @@
             // addLocationButton
             // 
             this.addLocationButton.CausesValidation = false;
-            this.addLocationButton.Location = new System.Drawing.Point(478, 388);
+            this.addLocationButton.Location = new System.Drawing.Point(478, 392);
             this.addLocationButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.addLocationButton.Name = "addLocationButton";
             this.addLocationButton.Size = new System.Drawing.Size(87, 30);
@@ -291,9 +279,9 @@
             this.locationComboBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.locationComboBox.DisplayMember = "DisplayName";
             this.locationComboBox.FormattingEnabled = true;
-            this.locationComboBox.Location = new System.Drawing.Point(241, 392);
+            this.locationComboBox.Location = new System.Drawing.Point(225, 396);
             this.locationComboBox.Name = "locationComboBox";
-            this.locationComboBox.Size = new System.Drawing.Size(231, 25);
+            this.locationComboBox.Size = new System.Drawing.Size(247, 25);
             this.locationComboBox.Sorted = true;
             this.locationComboBox.TabIndex = 23;
             this.locationComboBox.SelectedIndexChanged += new System.EventHandler(this.locationComboBox_SelectedIndexChanged);
@@ -311,11 +299,25 @@
             this.editLocationButton.UseVisualStyleBackColor = true;
             this.editLocationButton.Click += new System.EventHandler(this.editLocationButton_Click);
             // 
+            // screensListBox
+            // 
+            this.screensListBox.DisplayMember = "ShortDescription";
+            this.screensListBox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.screensListBox.FormattingEnabled = true;
+            this.screensListBox.ItemHeight = 65;
+            this.screensListBox.Location = new System.Drawing.Point(19, 157);
+            this.screensListBox.Name = "screensListBox";
+            this.screensListBox.Size = new System.Drawing.Size(85, 264);
+            this.screensListBox.TabIndex = 25;
+            this.screensListBox.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.screensListBox_DrawItem);
+            this.screensListBox.SelectedIndexChanged += new System.EventHandler(this.screensListBox_SelectedIndexChanged);
+            // 
             // SettingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(577, 480);
+            this.Controls.Add(this.screensListBox);
             this.Controls.Add(this.editLocationButton);
             this.Controls.Add(this.locationComboBox);
             this.Controls.Add(this.removeLocationButton);
@@ -327,7 +329,6 @@
             this.Controls.Add(this.githubLinkLabel);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.selectedScreenNameLabel);
-            this.Controls.Add(this.mainListView);
             this.Controls.Add(this.worldTimesListView);
             this.Controls.Add(this.displayWorldTimesRadioButton);
             this.Controls.Add(this.displayCurrentTimeRadioButton);
@@ -357,7 +358,6 @@
         private System.Windows.Forms.RadioButton displayWorldTimesRadioButton;
         private System.Windows.Forms.ListView worldTimesListView;
         private System.Windows.Forms.ColumnHeader cityColumnHeader;
-        private System.Windows.Forms.ListView mainListView;
         private System.Windows.Forms.ImageList largeImageList;
         private System.Windows.Forms.RadioButton display24hrRadioButton;
         private System.Windows.Forms.RadioButton display12hrRadioButton;
@@ -373,5 +373,6 @@
         private System.Windows.Forms.Button removeLocationButton;
         private System.Windows.Forms.ComboBox locationComboBox;
         private System.Windows.Forms.Button editLocationButton;
+        private System.Windows.Forms.ListBox screensListBox;
     }
 }

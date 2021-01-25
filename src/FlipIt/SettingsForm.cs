@@ -2,8 +2,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Runtime.Remoting.Messaging;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace ScreenSaver
@@ -61,24 +60,16 @@ namespace ScreenSaver
 
             scaleTrackBar.Value = _settings.Scale / 10;
 
-            mainListView.Items.Clear();
+            screensListBox.Items.Clear();
             foreach (var screen in _settings.ScreenSettings)
             {
-                var item = new ListViewItem(screen.ShortDescription)
-                {
-                    ImageIndex = 0, 
-                    Tag = screen
-                };
-                mainListView.Items.Add(item);
+                screensListBox.Items.Add(screen);
             }
-            mainListView.Items[0].Selected = true;
+            screensListBox.SelectedIndex = 0;
         }
 
         private void DisplayScreenDetails()
         {
-            if (mainListView.SelectedIndices.Count == 0)
-                return;
-
             var screenSettings = GetCurrentScreenSettings();
             selectedScreenNameLabel.Text = $"{screenSettings.Description}";
             switch (screenSettings.DisplayType)
@@ -106,8 +97,7 @@ namespace ScreenSaver
 
         private ScreenSetting GetCurrentScreenSettings()
         {
-            var selectedItem = mainListView.Items[mainListView.SelectedIndices[0]];
-            return (ScreenSetting) selectedItem.Tag;
+            return (ScreenSetting) screensListBox.SelectedItem;
         }
 
         private void CheckWorldTimesControls()
@@ -118,11 +108,6 @@ namespace ScreenSaver
             addLocationButton.Enabled = allowLocationEditing && locationComboBox.SelectedItem != null;
             removeLocationButton.Enabled = allowLocationEditing && worldTimesListView.SelectedIndices.Count > 0;
             editLocationButton.Enabled = removeLocationButton.Enabled;
-        }
-
-        private void mainListView_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            DisplayScreenDetails();
         }
 
         private void displayWorldTimesRadioButton_CheckedChanged(object sender, EventArgs e)
@@ -294,6 +279,31 @@ namespace ScreenSaver
             {
                 screen.Locations.Add(new Location((string)item.Tag, item.Text));
             }
+        }
+
+        private void screensListBox_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            if (e.Index == -1)
+                return;
+            
+            e.DrawBackground();
+            var rect = new Rectangle(e.Bounds.X + 20, e.Bounds.Y + 4, 32, 32);
+            e.Graphics.DrawImageUnscaled(Properties.Resources.screen, rect);
+            
+            var screen = (ScreenSetting) screensListBox.Items[e.Index];
+            var isSelected = (e.State & DrawItemState.Selected) == DrawItemState.Selected;//screensListBox.SelectedIndex == e.Index;
+            e.Graphics.DrawString(screen.ShortDescription, 
+                e.Font, isSelected ? Brushes.White : Brushes.Black, 
+                new Rectangle(e.Bounds.X + 10, e.Bounds.Y + 40, e.Bounds.Width, e.Bounds.Height),
+                StringFormat.GenericDefault);
+                
+            // If the ListBox has focus, draw a focus rectangle around the selected item.
+            e.DrawFocusRectangle();
+        }
+
+        private void screensListBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            DisplayScreenDetails();
         }
     }
 }
