@@ -16,7 +16,10 @@ namespace ScreenSaver
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
 
-            var settings = FlipItSettings.Load(Screen.AllScreens);
+			// For testing...
+			// Application.CurrentCulture = new CultureInfo("nl-NL");
+
+			var settings = FlipItSettings.Load(Screen.AllScreens);
 
 			if (args.Length > 0)
 			{

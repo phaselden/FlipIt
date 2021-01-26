@@ -81,6 +81,13 @@ namespace ScreenSaver
             Marshal.FreeCoTaskMem(ptr);
         }
 
+        protected string FormatAmPm(DateTime time)
+        {
+            // We format this ourselves because some cultures, such as nl-NL produce, results longer than 2 chars. ie. "a.m."
+            // and we want to be consistent with the current time screen
+            return time.Hour >= 12 ? "PM" : "AM";
+        }
+
         internal void DisposeResources()
         {
             if (_fontFamily != null)

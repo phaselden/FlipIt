@@ -68,7 +68,6 @@
     <Compile Include="Location.cs" />
     <Compile Include="CurrentTimeScreen.cs" />
     <Compile Include="DisplayType.cs" />
-    <Compile Include="DstIndicatorStyle.cs" />
     <Compile Include="FlipItSettings.cs" />
     <Compile Include="Int32Extensions.cs" />
     <Compile Include="RoundedRectangle.cs" />
@@ -138,6 +137,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="res\screen.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\TimeZoneCities.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

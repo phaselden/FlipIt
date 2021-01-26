@@ -2,8 +2,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
+using ScreenSaver.Properties;
 
 namespace ScreenSaver
 {
@@ -215,6 +217,41 @@ namespace ScreenSaver
             locationComboBox.Sorted = false;
             locationComboBox.Items.Clear();
             
+            // LoadLocationsFromWindows();
+            LoadLocationsFromFile();
+
+            locationComboBox.Sorted = true;
+        }
+
+        private void LoadLocationsFromFile()
+        {
+            var txt = Resources.TimeZoneCities;
+            var lines = txt.Split(new[] {"\r\n"}, StringSplitOptions.None);
+            foreach(var rawLine in lines)
+            {
+                var line = rawLine.Trim();
+                if (String.IsNullOrEmpty(line) || line.StartsWith(";")) 
+                    continue;
+                var parts= line.Split('=');
+                Debug.Assert(parts.Length == 2);
+                if (parts.Length != 2) // Something strange happened. Just ignore it.
+                    continue;
+                var cities = parts[1].Split(',');
+                foreach (var city in cities)
+                {
+                    // Exclude some names
+                    if (city == "PST8PDT")
+                        continue;
+                    if (city.StartsWith("GMT") && city.Length > 3)
+                        continue;
+
+                    locationComboBox.Items.Add(new Location(parts[0], city));
+                }
+            }
+        }
+
+        private void LoadLocationsFromWindows()
+        {
             var timeZones = TimeZoneInfo.GetSystemTimeZones();
 
             foreach (var timeZone in timeZones)
@@ -226,8 +263,6 @@ namespace ScreenSaver
                     locationComboBox.Items.Add(city);
                 }
             }
-
-            locationComboBox.Sorted = true;
         }
 
         private IEnumerable<string> ParseLocationNames(string timeZoneDisplayName)

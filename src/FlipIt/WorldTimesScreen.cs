@@ -9,6 +9,7 @@ namespace ScreenSaver
     internal class WorldTimesScreen : TimeScreen
     {
         private readonly List<Location> _cities;
+        private readonly bool _display24HourTime;
 
         private readonly Pen _smallSplitPen = new Pen(Color.Black, SplitWidth);
         private readonly Brush _backFillTop = new SolidBrush(BackColorBottom);
@@ -22,30 +23,37 @@ namespace ScreenSaver
         private Font LargeFont => _largeFont ?? (_largeFont = new Font(FontFamily, _boxHeight.Percent(80), FontStyle.Regular, GraphicsUnit.Pixel));
         private Font SmallFont => _smallFont ?? (_smallFont = new Font(FontFamily, _boxHeight.Percent(25), FontStyle.Regular, GraphicsUnit.Pixel));
 
-        private const DstIndicatorStyle CityDisplayDstIndicatorStyle = DstIndicatorStyle.DstAsAsterisk; // .SmallDst;
         private const int SplitWidth = 2;
         private const int BoxWidthPercentage = 70;
         private const int HorizontalGapBetweenBoxesPercent = 5;
         private const int VerticalGapBetweenBoxesPercent = 10;
-        private const int TimeLengthInChars = 9;
+        
+        private readonly int _timeLengthInChars;  // including optional am/pm indicator and * for DST.
 
-        public WorldTimesScreen(List<Location> cities, Form form)
+        public WorldTimesScreen(List<Location> cities, Form form, bool display24HourTime)
         {
             _cities = cities;
             _form = form;
+            _display24HourTime = display24HourTime;
+
+            //var testTime = new DateTime(2000, 1, 1, 23, 59, 59);
+            var timeLength = DateTime.Now.ToString("HH:mm").Length;
+            
+            // 12hr:    London  11:59:59 PM*
+            // 24hr:    London  23:59:59*
+            _timeLengthInChars = timeLength + 1;
+            if (!_display24HourTime)
+                _timeLengthInChars += 3;
         }
 
         internal override void Draw()
         {
-            const int dstIndicatorLength = 1;
             const int dayIndicatorLength = 3;
             const int maxBoxHeight = 160;
 
             var maxNameLengthInChars = _cities.Max(c => c.DisplayName.Length);
 
-            var maxRowLengthInChars = CityDisplayDstIndicatorStyle == DstIndicatorStyle.SmallDst
-                ? maxNameLengthInChars + 2 + TimeLengthInChars + 1 + dstIndicatorLength
-                : maxNameLengthInChars + 2 + TimeLengthInChars + 1 + dayIndicatorLength;
+            var maxRowLengthInChars = maxNameLengthInChars + 2 + _timeLengthInChars + 1 + dayIndicatorLength;
 
             var maxWidth = _form.Width - 40; // leave some margin
             var maxHeight = _form.Height - 40;
@@ -58,7 +66,6 @@ namespace ScreenSaver
 
             var verticalGap = boxHeight.Percent(VerticalGapBetweenBoxesPercent);
 
-            //var heightForAllRows = (boxHeight + verticalGap) * cities.Count - verticalGap;
             var heightForAllRows = CalcSize(_cities.Count, boxHeight, verticalGap);
             var y = (_form.Height - heightForAllRows) / 2;
             if (y < 20)
@@ -73,13 +80,13 @@ namespace ScreenSaver
             foreach (var city in _cities.OrderBy(c => c.CurrentTime))
             {
                 city.RefreshTime(SystemTime.Now);
-                var s = city.DisplayName.PadRight(maxNameLengthInChars + 2) + FormatTime(city, CityDisplayDstIndicatorStyle == DstIndicatorStyle.DstAsAsterisk);
-                DrawRow(startingX, y, boxSize, horizontalGap, s, city, CityDisplayDstIndicatorStyle);
+                var s = city.DisplayName.PadRight(maxNameLengthInChars + 2) + FormatTime(city);
+                DrawRow(startingX, y, boxSize, horizontalGap, s);
                 y += boxHeight + verticalGap;
             }
         }
 
-        private void DrawRow(int x, int y, Size boxSize, int horizontalGap, string s, Location location, DstIndicatorStyle dstIndicatorStyle)
+        private void DrawRow(int x, int y, Size boxSize, int horizontalGap, string s)
         {
             var boxRectangle = new Rectangle(new Point(x, y), boxSize);
             foreach (var c in s.ToUpperInvariant())
@@ -87,37 +94,6 @@ namespace ScreenSaver
                 DrawCharInBox(boxRectangle, c);
                 boxRectangle.X = boxRectangle.Right + horizontalGap;
             }
-
-            if (dstIndicatorStyle == DstIndicatorStyle.SmallDst)
-            {
-                if (location.IsDaylightSavingTime || location.DaysDifference != 0)
-                {
-                    DrawSmallStringsInBox(boxRectangle,
-                        location.IsDaylightSavingTime ? "DST" : null,
-                        location.DaysDifference != 0 ? $"{location.DaysDifference:+#;-#}d" : null);
-                }
-                else
-                {
-                    DrawCharInBox(boxRectangle, ' ');
-                }
-            }
-            else
-            {
-                DrawStringInBoxes(boxRectangle, horizontalGap,
-                    location.DaysDifference != 0
-                        ? " " + location.CurrentTime.ToString("ddd")
-                        : "    ");
-            }
-        }
-
-        private int DrawStringInBoxes(Rectangle boxRectangle, int horizontalGap, string s)
-        {
-            foreach (var c in s.ToUpperInvariant())
-            {
-                DrawCharInBox(boxRectangle, c);
-                boxRectangle.X = boxRectangle.Right + horizontalGap;
-            }
-            return boxRectangle.X;
         }
 
         private void DrawCharInBox(Rectangle boxRectangle, char theChar)
@@ -188,11 +164,44 @@ namespace ScreenSaver
             return (itemCount * (itemSize + gapSize)) - gapSize;
         }
 
-        private string FormatTime(Location location, bool appendAsteriskIfDst)
+        private string FormatTime(Location location)
         {
-            var suffix = appendAsteriskIfDst && location.IsDaylightSavingTime ? "*" : " ";
-            var result = $"{location.CurrentTime:h:mm tt}{suffix}";
-            return $"{result,TimeLengthInChars}";  // right aligned in 9 chars
+            // 12hr:    London  11:59:59 PM* MON
+            // 24hr:    London  23:59:59* MON
+
+            var formatString = $"{{0, {_timeLengthInChars}}}";
+
+            if (location.HasError)
+            {
+                return "Error".PadRight(_timeLengthInChars) + "    ";
+                //return String.Format(formatString, "   Error") + "    "; // 4 spaces for day indicator
+            }
+
+            var dst = location.IsDaylightSavingTime ? "*" : " ";
+
+            var daySuffix = location.DaysDifference != 0
+                ? location.CurrentTime.ToString("ddd")
+                : "   ";
+            if (daySuffix.Length != 3)
+                daySuffix = FixStringLength(daySuffix, 3);
+
+            var timePart = !_display24HourTime 
+                ? $"{location.CurrentTime:h:mm} {FormatAmPm(location.CurrentTime)}{dst}" 
+                : $"{location.CurrentTime:HH:mm}{dst}";
+
+            return String.Format(formatString, timePart) + " " + daySuffix;
+            
+        }
+
+        private string FixStringLength(string s, int length, bool padRight = true)
+        {
+            if (s == null)
+                return new string(' ', length);
+            if (s.Length == length)
+                return s;
+            return s.Length > length 
+                ? s.Substring(0, length) 
+                : padRight ? s.PadRight(length) : s.PadLeft(length);
         }
 
         protected override byte[] GetFontResource()
