@@ -18,17 +18,23 @@ namespace ScreenSaver
         private Font _largeFont;
         private Font _smallFont;
 
-        private int _boxHeight;
+        private Font LargeFont => _largeFont ?? (_largeFont = new Font(FontFamily,  _boxSize.Height.Percent(80), FontStyle.Regular, GraphicsUnit.Pixel));
+        private Font SmallFont => _smallFont ?? (_smallFont = new Font(FontFamily, _boxSize.Height.Percent(25), FontStyle.Regular, GraphicsUnit.Pixel));
 
-        private Font LargeFont => _largeFont ?? (_largeFont = new Font(FontFamily, _boxHeight.Percent(80), FontStyle.Regular, GraphicsUnit.Pixel));
-        private Font SmallFont => _smallFont ?? (_smallFont = new Font(FontFamily, _boxHeight.Percent(25), FontStyle.Regular, GraphicsUnit.Pixel));
-
+        private const int DayIndicatorLength = 3;
+        private const int MaxBoxHeight = 160;
         private const int SplitWidth = 2;
         private const int BoxWidthPercentage = 70;
         private const int HorizontalGapBetweenBoxesPercent = 5;
         private const int VerticalGapBetweenBoxesPercent = 10;
-        
-        private readonly int _timeLengthInChars;  // including optional am/pm indicator and * for DST.
+
+        private int _maxNameLengthInChars;
+        private int _timeLengthInChars;  // including optional am/pm indicator and * for DST.
+        private Size _boxSize;
+        private int _horizontalGap;
+        private int _verticalGap;
+        private int _startingX;
+        private int _startingY;
 
         public WorldTimesScreen(List<Location> cities, Form form, bool display24HourTime)
         {
@@ -36,53 +42,62 @@ namespace ScreenSaver
             _form = form;
             _display24HourTime = display24HourTime;
 
-            //var testTime = new DateTime(2000, 1, 1, 23, 59, 59);
-            var timeLength = DateTime.Now.ToString("HH:mm").Length;
-            
+            CalculateTimeCharCount();
+            CalculateLayout();
+        }
+        
+        private void CalculateTimeCharCount()
+        {
             // 12hr:    London  11:59:59 PM*
             // 24hr:    London  23:59:59*
+            var timeLength = DateTime.Now.ToString("HH:mm").Length;
             _timeLengthInChars = timeLength + 1;
             if (!_display24HourTime)
                 _timeLengthInChars += 3;
         }
 
-        internal override void Draw()
+        private void CalculateLayout()
         {
-            const int dayIndicatorLength = 3;
-            const int maxBoxHeight = 160;
-
-            var maxNameLengthInChars = _cities.Max(c => c.DisplayName.Length);
-
-            var maxRowLengthInChars = maxNameLengthInChars + 2 + _timeLengthInChars + 1 + dayIndicatorLength;
+            _maxNameLengthInChars = _cities.Max(c => c.DisplayName.Length);
+            var rowLengthInChars = _maxNameLengthInChars + 2 + _timeLengthInChars + 1 + DayIndicatorLength;
 
             var maxWidth = _form.Width - 40; // leave some margin
             var maxHeight = _form.Height - 40;
+            
+            var candidateBoxWidth = CalcBoxSize(maxWidth, 0, rowLengthInChars, HorizontalGapBetweenBoxesPercent/100.0);
+            var candidateBoxHeight = CalcBoxSize(maxHeight, 0, _cities.Count, VerticalGapBetweenBoxesPercent/100.0);
+            var boxHeightIfUsingWidth = candidateBoxWidth.PercentInv(BoxWidthPercentage);
+            var boxHeight = Math.Min(candidateBoxHeight, boxHeightIfUsingWidth);
+            boxHeight = Math.Min(boxHeight, MaxBoxHeight);
+            _boxSize = new Size(boxHeight.Percent(BoxWidthPercentage), boxHeight);
 
-            var roughBoxWidth = maxWidth / maxRowLengthInChars; // the rough max width of boxes
-            var roughBoxHeight = maxHeight / _cities.Count;
-            var boxHeight = Math.Min(roughBoxHeight, roughBoxWidth.PercentInv(BoxWidthPercentage));
-            boxHeight -= boxHeight.Percent(VerticalGapBetweenBoxesPercent);
-            _boxHeight = Math.Min(boxHeight, maxBoxHeight);
+            _horizontalGap = _boxSize.Height.Percent(HorizontalGapBetweenBoxesPercent);
+            _verticalGap = _boxSize.Height.Percent(VerticalGapBetweenBoxesPercent);
 
-            var verticalGap = boxHeight.Percent(VerticalGapBetweenBoxesPercent);
+            var heightForAllRows = CalcSize(_cities.Count, _boxSize.Height, _verticalGap);
+            _startingY = (_form.Height - heightForAllRows) / 2;
+            
+            var rowWidth = CalcSize(rowLengthInChars, _boxSize.Width, _horizontalGap);
+            _startingX = (_form.Width - rowWidth) / 2;
+        }
 
-            var heightForAllRows = CalcSize(_cities.Count, boxHeight, verticalGap);
-            var y = (_form.Height - heightForAllRows) / 2;
-            if (y < 20)
-            {
-                y = 20;
-            }
-            var startingX = (_form.Width - maxRowLengthInChars * boxHeight.Percent(BoxWidthPercentage)).Percent(50);
+        private int CalcBoxSize(int total, int borderPercent, int boxCount, double separatorFraction)
+        {
+            var borderSize = total.Percent(borderPercent);
+            var remainingSpace = total - (borderSize * 2);
+            var parts = (1 + separatorFraction) * boxCount - separatorFraction;
+            return Convert.ToInt32(remainingSpace / parts);
+        }
 
-            var boxSize = new Size(boxHeight.Percent(BoxWidthPercentage), boxHeight);
-            var horizontalGap = boxSize.Height.Percent(HorizontalGapBetweenBoxesPercent);
-
+        internal override void Draw()
+        {
+            var y = _startingY;
             foreach (var city in _cities.OrderBy(c => c.CurrentTime))
             {
                 city.RefreshTime(SystemTime.Now);
-                var s = city.DisplayName.PadRight(maxNameLengthInChars + 2) + FormatTime(city);
-                DrawRow(startingX, y, boxSize, horizontalGap, s);
-                y += boxHeight + verticalGap;
+                var s = city.DisplayName.PadRight(_maxNameLengthInChars + 2) + FormatTime(city);
+                DrawRow(_startingX, y, _boxSize, _horizontalGap, s);
+                y += _boxSize.Height + _verticalGap;
             }
         }
 
@@ -173,8 +188,7 @@ namespace ScreenSaver
 
             if (location.HasError)
             {
-                return "Error".PadRight(_timeLengthInChars) + "    ";
-                //return String.Format(formatString, "   Error") + "    "; // 4 spaces for day indicator
+                return "Error".PadRight(_timeLengthInChars) + new String(' ', DayIndicatorLength + 1);
             }
 
             var dst = location.IsDaylightSavingTime ? "*" : " ";
@@ -182,15 +196,14 @@ namespace ScreenSaver
             var daySuffix = location.DaysDifference != 0
                 ? location.CurrentTime.ToString("ddd")
                 : "   ";
-            if (daySuffix.Length != 3)
-                daySuffix = FixStringLength(daySuffix, 3);
+            if (daySuffix.Length != DayIndicatorLength)
+                daySuffix = FixStringLength(daySuffix, DayIndicatorLength);
 
             var timePart = !_display24HourTime 
                 ? $"{location.CurrentTime:h:mm} {FormatAmPm(location.CurrentTime)}{dst}" 
                 : $"{location.CurrentTime:HH:mm}{dst}";
 
             return String.Format(formatString, timePart) + " " + daySuffix;
-            
         }
 
         private string FixStringLength(string s, int length, bool padRight = true)
