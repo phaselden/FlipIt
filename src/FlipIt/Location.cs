@@ -10,7 +10,7 @@ namespace ScreenSaver
             TimeZoneID = timeZoneID;
         }
 
-        public string DisplayName { get; }
+        public string DisplayName { get; set; }
         public string TimeZoneID { get; }
         public DateTime CurrentTime { get; private set; }
         public bool IsDaylightSavingTime { get; private set; }

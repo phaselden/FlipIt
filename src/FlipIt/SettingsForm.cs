@@ -160,7 +160,7 @@ namespace ScreenSaver
 
         private void githubLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            System.Diagnostics.Process.Start("https://github.com/phaselden/FlipIt");
+            Process.Start("https://github.com/phaselden/FlipIt");
         }
 
         private void editLocationButton_Click(object sender, EventArgs e)
@@ -173,7 +173,34 @@ namespace ScreenSaver
 
         private void worldTimesListView_AfterLabelEdit(object sender, LabelEditEventArgs e)
         {
-            SyncLocationsFromListViewToSettings();
+            if (e.Label == null)  // no change
+                return;
+            var newCityName = e.Label.Trim();
+            if (newCityName.Length == 0)
+            {
+                MessageBox.Show("The name cannot be blank.", "FlipIt", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                e.CancelEdit = true;
+                return;
+            }
+            if (newCityName.Contains("="))
+            {
+                MessageBox.Show("The name cannot include the equals (=) character.", "FlipIt", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                e.CancelEdit = true;
+                return;
+            }
+
+            var screen = GetCurrentScreenSettings();
+            var location = screen.Locations.SingleOrDefault(s => s.DisplayName == worldTimesListView.Items[e.Item].Text);
+            if (location != null)
+            {
+                location.DisplayName = newCityName;
+            }
+            else
+            {
+                MessageBox.Show("The name cannot be updated.", "FlipIt", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                e.CancelEdit = true;
+                return;
+            }
         }
 
         private void removeLocationButton_Click(object sender, EventArgs e)
@@ -394,6 +421,11 @@ namespace ScreenSaver
         private bool IsValidCity(string cityName)
         {
             return cityName.Length > 0 && _availableCities.Exists(c => c.DisplayName.HasSameText(cityName));
+        }
+
+        private void worldTimesListView_BeforeLabelEdit(object sender, LabelEditEventArgs e)
+        {
+            MessageBox.Show("ioins");
         }
     }
 }
