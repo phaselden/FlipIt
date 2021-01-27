@@ -50,9 +50,10 @@
             this.label4 = new System.Windows.Forms.Label();
             this.addLocationButton = new System.Windows.Forms.Button();
             this.removeLocationButton = new System.Windows.Forms.Button();
-            this.locationComboBox = new System.Windows.Forms.ComboBox();
             this.editLocationButton = new System.Windows.Forms.Button();
             this.screensListBox = new System.Windows.Forms.ListBox();
+            this.citySearchTextBox = new System.Windows.Forms.TextBox();
+            this.versionLabel = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.scaleTrackBar)).BeginInit();
             this.SuspendLayout();
@@ -64,7 +65,7 @@
             this.okButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.okButton.Name = "okButton";
             this.okButton.Size = new System.Drawing.Size(87, 30);
-            this.okButton.TabIndex = 4;
+            this.okButton.TabIndex = 16;
             this.okButton.Text = "OK";
             this.okButton.UseVisualStyleBackColor = true;
             this.okButton.Click += new System.EventHandler(this.okButton_Click);
@@ -77,7 +78,7 @@
             this.cancelButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.cancelButton.Name = "cancelButton";
             this.cancelButton.Size = new System.Drawing.Size(87, 30);
-            this.cancelButton.TabIndex = 5;
+            this.cancelButton.TabIndex = 17;
             this.cancelButton.Text = "Cancel";
             this.cancelButton.UseVisualStyleBackColor = true;
             this.cancelButton.Click += new System.EventHandler(this.cancelButton_Click);
@@ -115,7 +116,7 @@
             this.displayWorldTimesRadioButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.displayWorldTimesRadioButton.Name = "displayWorldTimesRadioButton";
             this.displayWorldTimesRadioButton.Size = new System.Drawing.Size(99, 21);
-            this.displayWorldTimesRadioButton.TabIndex = 10;
+            this.displayWorldTimesRadioButton.TabIndex = 9;
             this.displayWorldTimesRadioButton.TabStop = true;
             this.displayWorldTimesRadioButton.Text = "World Times";
             this.displayWorldTimesRadioButton.UseVisualStyleBackColor = true;
@@ -132,7 +133,7 @@
             this.worldTimesListView.MultiSelect = false;
             this.worldTimesListView.Name = "worldTimesListView";
             this.worldTimesListView.Size = new System.Drawing.Size(247, 145);
-            this.worldTimesListView.TabIndex = 11;
+            this.worldTimesListView.TabIndex = 10;
             this.worldTimesListView.UseCompatibleStateImageBehavior = false;
             this.worldTimesListView.View = System.Windows.Forms.View.Details;
             this.worldTimesListView.AfterLabelEdit += new System.Windows.Forms.LabelEditEventHandler(this.worldTimesListView_AfterLabelEdit);
@@ -155,7 +156,7 @@
             this.display24hrRadioButton.Location = new System.Drawing.Point(145, 7);
             this.display24hrRadioButton.Name = "display24hrRadioButton";
             this.display24hrRadioButton.Size = new System.Drawing.Size(56, 21);
-            this.display24hrRadioButton.TabIndex = 1;
+            this.display24hrRadioButton.TabIndex = 2;
             this.display24hrRadioButton.TabStop = true;
             this.display24hrRadioButton.Text = "24 hr";
             this.display24hrRadioButton.UseVisualStyleBackColor = true;
@@ -167,7 +168,7 @@
             this.display12hrRadioButton.Location = new System.Drawing.Point(73, 7);
             this.display12hrRadioButton.Name = "display12hrRadioButton";
             this.display12hrRadioButton.Size = new System.Drawing.Size(56, 21);
-            this.display12hrRadioButton.TabIndex = 0;
+            this.display12hrRadioButton.TabIndex = 1;
             this.display12hrRadioButton.TabStop = true;
             this.display12hrRadioButton.Text = "12 hr";
             this.display12hrRadioButton.UseVisualStyleBackColor = true;
@@ -179,7 +180,7 @@
             this.selectedScreenNameLabel.Location = new System.Drawing.Point(117, 157);
             this.selectedScreenNameLabel.Name = "selectedScreenNameLabel";
             this.selectedScreenNameLabel.Size = new System.Drawing.Size(47, 17);
-            this.selectedScreenNameLabel.TabIndex = 14;
+            this.selectedScreenNameLabel.TabIndex = 6;
             this.selectedScreenNameLabel.Text = "Screen";
             // 
             // panel1
@@ -190,7 +191,7 @@
             this.panel1.Location = new System.Drawing.Point(47, 40);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(243, 40);
-            this.panel1.TabIndex = 15;
+            this.panel1.TabIndex = 1;
             // 
             // label3
             // 
@@ -198,7 +199,7 @@
             this.label3.Location = new System.Drawing.Point(4, 9);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(53, 17);
-            this.label3.TabIndex = 2;
+            this.label3.TabIndex = 0;
             this.label3.Text = "Display:";
             // 
             // githubLinkLabel
@@ -207,7 +208,7 @@
             this.githubLinkLabel.Location = new System.Drawing.Point(165, 454);
             this.githubLinkLabel.Name = "githubLinkLabel";
             this.githubLinkLabel.Size = new System.Drawing.Size(212, 17);
-            this.githubLinkLabel.TabIndex = 16;
+            this.githubLinkLabel.TabIndex = 15;
             this.githubLinkLabel.TabStop = true;
             this.githubLinkLabel.Text = "https://github.com/phaselden/FlipIt";
             this.githubLinkLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.githubLinkLabel_LinkClicked);
@@ -218,7 +219,7 @@
             this.scaleTrackBar.Location = new System.Drawing.Point(111, 86);
             this.scaleTrackBar.Name = "scaleTrackBar";
             this.scaleTrackBar.Size = new System.Drawing.Size(170, 45);
-            this.scaleTrackBar.TabIndex = 17;
+            this.scaleTrackBar.TabIndex = 3;
             // 
             // label1
             // 
@@ -226,7 +227,7 @@
             this.label1.Location = new System.Drawing.Point(51, 83);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(34, 17);
-            this.label1.TabIndex = 18;
+            this.label1.TabIndex = 2;
             this.label1.Text = "Size:";
             // 
             // label2
@@ -235,9 +236,9 @@
             this.label2.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.Location = new System.Drawing.Point(16, 20);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(89, 17);
-            this.label2.TabIndex = 19;
-            this.label2.Text = "Current Time";
+            this.label2.Size = new System.Drawing.Size(55, 17);
+            this.label2.TabIndex = 0;
+            this.label2.Text = "General";
             // 
             // label4
             // 
@@ -246,7 +247,7 @@
             this.label4.Location = new System.Drawing.Point(16, 130);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(54, 17);
-            this.label4.TabIndex = 20;
+            this.label4.TabIndex = 4;
             this.label4.Text = "Screens";
             // 
             // addLocationButton
@@ -256,8 +257,8 @@
             this.addLocationButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.addLocationButton.Name = "addLocationButton";
             this.addLocationButton.Size = new System.Drawing.Size(87, 30);
-            this.addLocationButton.TabIndex = 21;
-            this.addLocationButton.Text = "Add...";
+            this.addLocationButton.TabIndex = 14;
+            this.addLocationButton.Text = "Add";
             this.addLocationButton.UseVisualStyleBackColor = true;
             this.addLocationButton.Click += new System.EventHandler(this.addLocationButton_Click);
             // 
@@ -268,24 +269,10 @@
             this.removeLocationButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.removeLocationButton.Name = "removeLocationButton";
             this.removeLocationButton.Size = new System.Drawing.Size(87, 30);
-            this.removeLocationButton.TabIndex = 22;
+            this.removeLocationButton.TabIndex = 12;
             this.removeLocationButton.Text = "Remove";
             this.removeLocationButton.UseVisualStyleBackColor = true;
             this.removeLocationButton.Click += new System.EventHandler(this.removeLocationButton_Click);
-            // 
-            // locationComboBox
-            // 
-            this.locationComboBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
-            this.locationComboBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
-            this.locationComboBox.DisplayMember = "DisplayName";
-            this.locationComboBox.FormattingEnabled = true;
-            this.locationComboBox.Location = new System.Drawing.Point(225, 396);
-            this.locationComboBox.Name = "locationComboBox";
-            this.locationComboBox.Size = new System.Drawing.Size(247, 25);
-            this.locationComboBox.Sorted = true;
-            this.locationComboBox.TabIndex = 23;
-            this.locationComboBox.SelectedIndexChanged += new System.EventHandler(this.locationComboBox_SelectedIndexChanged);
-            this.locationComboBox.Enter += new System.EventHandler(this.locationComboBox_Enter);
             // 
             // editLocationButton
             // 
@@ -294,7 +281,7 @@
             this.editLocationButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.editLocationButton.Name = "editLocationButton";
             this.editLocationButton.Size = new System.Drawing.Size(87, 30);
-            this.editLocationButton.TabIndex = 24;
+            this.editLocationButton.TabIndex = 11;
             this.editLocationButton.Text = "Edit";
             this.editLocationButton.UseVisualStyleBackColor = true;
             this.editLocationButton.Click += new System.EventHandler(this.editLocationButton_Click);
@@ -308,18 +295,42 @@
             this.screensListBox.Location = new System.Drawing.Point(19, 157);
             this.screensListBox.Name = "screensListBox";
             this.screensListBox.Size = new System.Drawing.Size(85, 264);
-            this.screensListBox.TabIndex = 25;
+            this.screensListBox.TabIndex = 5;
             this.screensListBox.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.screensListBox_DrawItem);
             this.screensListBox.SelectedIndexChanged += new System.EventHandler(this.screensListBox_SelectedIndexChanged);
+            // 
+            // citySearchTextBox
+            // 
+            this.citySearchTextBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.citySearchTextBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.CustomSource;
+            this.citySearchTextBox.Location = new System.Drawing.Point(225, 396);
+            this.citySearchTextBox.Name = "citySearchTextBox";
+            this.citySearchTextBox.Size = new System.Drawing.Size(247, 25);
+            this.citySearchTextBox.TabIndex = 13;
+            this.citySearchTextBox.TextChanged += new System.EventHandler(this.citySearchTextBox_TextChanged);
+            this.citySearchTextBox.Enter += new System.EventHandler(this.citySearchTextBox_Enter);
+            this.citySearchTextBox.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.citySearchTextBox_PreviewKeyDown);
+            // 
+            // versionLabel
+            // 
+            this.versionLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.versionLabel.AutoSize = true;
+            this.versionLabel.Location = new System.Drawing.Point(484, 454);
+            this.versionLabel.Name = "versionLabel";
+            this.versionLabel.Size = new System.Drawing.Size(81, 17);
+            this.versionLabel.TabIndex = 18;
+            this.versionLabel.Text = "versionLabel";
+            this.versionLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // SettingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(577, 480);
+            this.Controls.Add(this.versionLabel);
+            this.Controls.Add(this.citySearchTextBox);
             this.Controls.Add(this.screensListBox);
             this.Controls.Add(this.editLocationButton);
-            this.Controls.Add(this.locationComboBox);
             this.Controls.Add(this.removeLocationButton);
             this.Controls.Add(this.addLocationButton);
             this.Controls.Add(this.label4);
@@ -371,8 +382,9 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button addLocationButton;
         private System.Windows.Forms.Button removeLocationButton;
-        private System.Windows.Forms.ComboBox locationComboBox;
         private System.Windows.Forms.Button editLocationButton;
         private System.Windows.Forms.ListBox screensListBox;
+        private System.Windows.Forms.TextBox citySearchTextBox;
+        private System.Windows.Forms.Label versionLabel;
     }
 }

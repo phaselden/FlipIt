@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Linq;
+using System.Reflection;
 using System.Windows.Forms;
 using ScreenSaver.Properties;
 
@@ -12,13 +14,23 @@ namespace ScreenSaver
 	public partial class SettingsForm : Form
     {
         private readonly FlipItSettings _settings;
+        private readonly List<Location> _availableCities = new List<Location>();
+        private readonly AutoCompleteStringCollection _cityAutoCompleteSource = new AutoCompleteStringCollection();
 
         public SettingsForm(FlipItSettings settings)
 		{
 			InitializeComponent();
             _settings = settings;
+
+            versionLabel.Text = $"Version {GetVersion()}";
         }
-		
+
+        private string GetVersion()
+        {
+            var version = typeof(SettingsForm).Assembly.GetName().Version;
+            return $"{version.Major}.{version.Minor}.{version.Build}";
+        }
+
         private void SaveSettings()
         {
             _settings.Scale = scaleTrackBar.Value * 10;
@@ -106,8 +118,8 @@ namespace ScreenSaver
         {
             var allowLocationEditing = displayWorldTimesRadioButton.Checked;
             worldTimesListView.Enabled = allowLocationEditing;
-            locationComboBox.Enabled = allowLocationEditing;
-            addLocationButton.Enabled = allowLocationEditing && locationComboBox.SelectedItem != null;
+            citySearchTextBox.Enabled = allowLocationEditing;
+            addLocationButton.Enabled = allowLocationEditing && IsValidCity(citySearchTextBox.Text);
             removeLocationButton.Enabled = allowLocationEditing && worldTimesListView.SelectedIndices.Count > 0;
             editLocationButton.Enabled = removeLocationButton.Enabled;
         }
@@ -176,12 +188,7 @@ namespace ScreenSaver
 
         private void addLocationButton_Click(object sender, EventArgs e)
         {
-            var location = (Location) locationComboBox.SelectedItem;
-            if (location == null)
-                return;
-
-            AddLocationToListView(location);
-            SyncLocationsFromListViewToSettings();
+            AddCityFromSearchBox();
         }
 
         private void AddLocationToListView(Location simpleLocation)
@@ -196,9 +203,9 @@ namespace ScreenSaver
             worldTimesListView.Items.Add(listViewItem);
         }
 
-        private void locationComboBox_Enter(object sender, EventArgs e)
+        private void FillCityList()
         {
-            if (locationComboBox.Items.Count == 0)
+            if (_availableCities.Count == 0)
             {
                 try
                 {
@@ -214,13 +221,13 @@ namespace ScreenSaver
 
         private void PopulateLocationsCombo()
         {
-            locationComboBox.Sorted = false;
-            locationComboBox.Items.Clear();
-            
+            _cityAutoCompleteSource.Clear();
+            _availableCities.Clear();
+
             // LoadLocationsFromWindows();
             LoadLocationsFromFile();
 
-            locationComboBox.Sorted = true;
+            citySearchTextBox.AutoCompleteCustomSource = _cityAutoCompleteSource;
         }
 
         private void LoadLocationsFromFile()
@@ -245,12 +252,13 @@ namespace ScreenSaver
                     if (city.StartsWith("GMT") && city.Length > 3)
                         continue;
 
-                    locationComboBox.Items.Add(new Location(parts[0], city));
+                    _availableCities.Add(new Location(parts[0], city));
+                    _cityAutoCompleteSource.Add(city);
                 }
             }
         }
 
-        private void LoadLocationsFromWindows()
+        /*private void LoadLocationsFromWindows()
         {
             var timeZones = TimeZoneInfo.GetSystemTimeZones();
 
@@ -260,10 +268,9 @@ namespace ScreenSaver
                 foreach (var locationName in locationNames)
                 {
                     var city = new Location(timeZone.Id, locationName.Trim());
-                    locationComboBox.Items.Add(city);
                 }
             }
-        }
+        }*/
 
         private IEnumerable<string> ParseLocationNames(string timeZoneDisplayName)
         {
@@ -301,13 +308,11 @@ namespace ScreenSaver
             CheckWorldTimesControls();
         }
 
-        private void locationComboBox_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            CheckWorldTimesControls();
-        }
-
         private void SyncLocationsFromListViewToSettings()
         {
+            // Note: We don't have to worry about any unsaved cities being in the list if the form
+            // is redisplayed, because the app exists after the form closes.
+
             var screen = GetCurrentScreenSettings();
             screen.Locations.Clear();
             foreach (ListViewItem item in worldTimesListView.Items)
@@ -339,6 +344,56 @@ namespace ScreenSaver
         private void screensListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             DisplayScreenDetails();
+        }
+
+        private void citySearchTextBox_Enter(object sender, EventArgs e)
+        {
+            FillCityList();
+        }
+
+        private void AddCityFromSearchBox()
+        {
+            var citySearch = citySearchTextBox.Text.Trim();
+            var location = _availableCities.SingleOrDefault(s => s.DisplayName.HasSameText(citySearch));
+            if (location != null)
+            {
+                if (WorldTimesListViewContainsCity(location.DisplayName))
+                {
+                    MessageBox.Show($"'{location.DisplayName}' is already in the list", "Duplicate City", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+
+                AddLocationToListView(location);
+                SyncLocationsFromListViewToSettings(); 
+            }
+        }
+
+        private void citySearchTextBox_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                AddCityFromSearchBox();
+            }
+        }
+
+        private bool WorldTimesListViewContainsCity(string cityName)
+        {
+            foreach (ListViewItem item in worldTimesListView.Items)
+            {
+                if (item.Text.HasSameText(cityName))
+                    return true;
+            }
+            return false;
+        }
+
+        private void citySearchTextBox_TextChanged(object sender, EventArgs e)
+        {
+            addLocationButton.Enabled = IsValidCity(citySearchTextBox.Text);
+        }
+
+        private bool IsValidCity(string cityName)
+        {
+            return cityName.Length > 0 && _availableCities.Exists(c => c.DisplayName.HasSameText(cityName));
         }
     }
 }
