@@ -12,7 +12,7 @@ namespace ScreenSaver
         private readonly bool _display24HourTime;
 
         private readonly Pen _smallSplitPen = new Pen(Color.Black, SplitWidth);
-        private readonly Brush _backFillTop = new SolidBrush(BackColorBottom);
+        private readonly Brush _backFillTop = new SolidBrush(BackColorTop);
         private readonly Pen _cityBoxPen = new Pen(BackColorBottom);
 
         private Font _largeFont;
