@@ -31,6 +31,9 @@ namespace ScreenSaver
 
 		private readonly FlipItSettings _settings;
         private readonly ScreenSetting _screenSetting;
+
+        // We store the mouse location so that we can ignore the mouse move event that
+		// automatically occurs when the form is first shown
 		private Point _mouseLocation;
 		private readonly bool _isPreviewMode;
 		private readonly bool _showSeconds = false;
@@ -172,11 +175,9 @@ namespace ScreenSaver
 			{
 				if (!_mouseLocation.IsEmpty)
 				{
-					// Terminate if mouse is moved a significant distance
-					if (Math.Abs(_mouseLocation.X - e.X) > 5 ||
-						Math.Abs(_mouseLocation.Y - e.Y) > 5)
-						Application.Exit();
-				}
+					if (_mouseLocation != e.Location)
+                        Application.Exit();
+                }
 
 				// Update current mouse location
 				_mouseLocation = e.Location;
