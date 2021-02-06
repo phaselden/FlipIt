@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
 
@@ -142,12 +143,26 @@ namespace ScreenSaver
                 _timeScreen.Draw();
 			}
 			catch (Exception e)
-			{
-				Console.WriteLine(e);
-			}
+            {
+                Console.WriteLine(e);
+                LogError(e);
+            }
 		}
-		
-		private List<Location> GetDefaultLocations()
+
+        private static void LogError(Exception e)
+        {
+            var settingsFolder =
+                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "FlipIt");
+            if (!Directory.Exists(settingsFolder))
+            {
+                Directory.CreateDirectory(settingsFolder);
+            }
+
+            File.AppendAllText(Path.Combine(settingsFolder, "Errors.txt"),
+                $"{DateTime.Now} - {e}{Environment.NewLine}");
+        }
+
+        private List<Location> GetDefaultLocations()
 		{
 			var result = new List<Location>();
 			
