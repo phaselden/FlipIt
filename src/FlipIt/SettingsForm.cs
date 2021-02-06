@@ -72,6 +72,8 @@ namespace ScreenSaver
                 display12hrRadioButton.Checked = true;
             }
 
+            showDstIndicatorCheckBox.Checked = _settings.ShowDstIndicator;
+            
             scaleTrackBar.Value = _settings.Scale / 10;
 
             screensListBox.Items.Clear();
@@ -423,9 +425,9 @@ namespace ScreenSaver
             return cityName.Length > 0 && _availableCities.Exists(c => c.DisplayName.HasSameText(cityName));
         }
 
-        private void worldTimesListView_BeforeLabelEdit(object sender, LabelEditEventArgs e)
+        private void showDstIndicatorCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            MessageBox.Show("ioins");
+            _settings.ShowDstIndicator = showDstIndicatorCheckBox.Checked;
         }
     }
 }
