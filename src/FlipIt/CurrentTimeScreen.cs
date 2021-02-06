@@ -17,8 +17,8 @@ namespace ScreenSaver
         private Font _largeFont;
         private Font _smallFont;
 
-        private Font LargeFont => _largeFont ?? (_largeFont = new Font(FontFamily, _boxSize.Percent(85), FontStyle.Regular, GraphicsUnit.Pixel));
-        private Font SmallFont => _smallFont ?? (_smallFont = new Font(FontFamily, _boxSize.Percent(9), FontStyle.Regular, GraphicsUnit.Pixel));
+        private Font LargeFont => _largeFont ?? (_largeFont = new Font(FontFamily, _boxSize.Percent(85), FontStyle.Bold, GraphicsUnit.Pixel));
+        private Font SmallFont => _smallFont ?? (_smallFont = new Font(FontFamily, _boxSize.Percent(9), FontStyle.Bold, GraphicsUnit.Pixel));
 
         private readonly Brush _fontBrush = new SolidBrush(Color.FromArgb(255, 183, 183, 183));
         private readonly Pen _splitPen = new Pen(Color.Black, SplitWidth);
