@@ -132,8 +132,8 @@ namespace ScreenSaver
                     else if (_screenSetting.DisplayType == DisplayType.WorldTime)
                     {
                         _timeScreen = _screenSetting.Locations.Count > 0 
-                            ? new WorldTimesScreen(_screenSetting.Locations, this, _settings.Display24HrTime) 
-                            : new WorldTimesScreen(GetDefaultLocations(), this, _settings.Display24HrTime);
+                            ? new WorldTimesScreen(_screenSetting.Locations, this, _settings.Display24HrTime, _settings.ShowDstIndicator) 
+                            : new WorldTimesScreen(GetDefaultLocations(), this, _settings.Display24HrTime, _settings.ShowDstIndicator);
                     }
                     else
                     {

@@ -10,6 +10,7 @@ namespace ScreenSaver
     {
         private readonly List<Location> _cities;
         private readonly bool _display24HourTime;
+        private readonly bool _displayDstIndicator;
 
         private readonly Pen _smallSplitPen = new Pen(Color.Black, SplitWidth);
         private readonly Brush _backFillTop = new SolidBrush(BackColorTop);
@@ -36,11 +37,12 @@ namespace ScreenSaver
         private int _startingX;
         private int _startingY;
 
-        public WorldTimesScreen(List<Location> cities, Form form, bool display24HourTime)
+        public WorldTimesScreen(List<Location> cities, Form form, bool display24HourTime, bool displayDstIndicator)
         {
             _cities = cities;
             _form = form;
             _display24HourTime = display24HourTime;
+            _displayDstIndicator = displayDstIndicator;
 
             CalculateTimeCharCount();
             CalculateLayout();
@@ -51,7 +53,9 @@ namespace ScreenSaver
             // 12hr:    London  11:59:59 PM*
             // 24hr:    London  23:59:59*
             var timeLength = DateTime.Now.ToString("HH:mm").Length;
-            _timeLengthInChars = timeLength + 1;
+            _timeLengthInChars = timeLength;
+            if (_displayDstIndicator)
+                _timeLengthInChars += 1;
             if (!_display24HourTime)
                 _timeLengthInChars += 3;
         }
@@ -191,7 +195,9 @@ namespace ScreenSaver
                 return "Error".PadRight(_timeLengthInChars) + new String(' ', DayIndicatorLength + 1);
             }
 
-            var dst = location.IsDaylightSavingTime ? "*" : " ";
+            var dst = "";
+            if (_displayDstIndicator)
+                dst = location.IsDaylightSavingTime ? "*" : " ";
 
             var daySuffix = location.DaysDifference != 0
                 ? location.CurrentTime.ToString("ddd")
