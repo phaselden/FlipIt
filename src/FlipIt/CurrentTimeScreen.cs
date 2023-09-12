@@ -9,7 +9,7 @@ namespace ScreenSaver
     {
         private readonly bool _display24HourTime;
         private readonly bool _isPreviewMode;
-        private readonly bool _showSeconds = false;
+        private readonly bool _showSeconds = true;
 
         private const int SplitWidth = 4;
         private const double BoxSeparationPercent = 0.05; // ie. 5%
@@ -42,13 +42,13 @@ namespace ScreenSaver
             //  * A scale of 100 = 30%
             var borderPercent = (100 - scalePercent) / 4 + 5;
             
-            var boxSizeWidth = CalcBoxSize(form.Width, borderPercent, 2);
+            var boxSizeWidth = CalcBoxSize(form.Width, borderPercent, _showSeconds ? 3:2);
             var boxSizeHeight = CalcBoxSize(form.Height, borderPercent, 1);
             
             _boxSize = Math.Min(boxSizeWidth, boxSizeHeight);
             _separatorWidth = Convert.ToInt32(_boxSize * BoxSeparationPercent);
 
-            _startingX = CalcOffset(form.Width, 2, _boxSize, _separatorWidth);
+            _startingX = CalcOffset(form.Width, _showSeconds ? 3:2, _boxSize, _separatorWidth);
             _startingY = CalcOffset(form.Height, 1, _boxSize, 0);
         }
 
