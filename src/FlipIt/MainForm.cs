@@ -37,7 +37,7 @@ namespace ScreenSaver
 		// automatically occurs when the form is first shown
 		private Point _mouseLocation;
 		private readonly bool _isPreviewMode;
-		private readonly bool _showSeconds = false;
+		private readonly bool _showSeconds = true;
 		private int _lastMinute = -1;
 
         public MainForm()
@@ -127,7 +127,7 @@ namespace ScreenSaver
                 {
                     if (_isPreviewMode || _screenSetting.DisplayType == DisplayType.CurrentTime)
                     {
-                        _timeScreen = new CurrentTimeScreen(this, _settings.Display24HrTime, _isPreviewMode, _settings.Scale);
+                        _timeScreen = new CurrentTimeScreen(this, _settings.Display24HrTime, _isPreviewMode, _settings.Scale,_settings.ShowSeconds);
 					}
                     else if (_screenSetting.DisplayType == DisplayType.WorldTime)
                     {
