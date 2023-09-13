@@ -11,6 +11,7 @@ namespace ScreenSaver
         private readonly List<Location> _cities;
         private readonly bool _display24HourTime;
         private readonly bool _displayDstIndicator;
+        private readonly bool _showSeconds;
 
         private readonly Pen _smallSplitPen = new Pen(Color.Black, SplitWidth);
         private readonly Brush _backFillTop = new SolidBrush(BackColorTop);
@@ -37,12 +38,13 @@ namespace ScreenSaver
         private int _startingX;
         private int _startingY;
 
-        public WorldTimesScreen(List<Location> cities, Form form, bool display24HourTime, bool displayDstIndicator)
+        public WorldTimesScreen(List<Location> cities, Form form, bool display24HourTime, bool displayDstIndicator, bool showSeconds)
         {
             _cities = cities;
             _form = form;
             _display24HourTime = display24HourTime;
             _displayDstIndicator = displayDstIndicator;
+            _showSeconds = showSeconds;
 
             CalculateTimeCharCount();
             CalculateLayout();
@@ -52,7 +54,7 @@ namespace ScreenSaver
         {
             // 12hr:    London  11:59:59 PM*
             // 24hr:    London  23:59:59*
-            var timeLength = DateTime.Now.ToString("HH:mm").Length;
+            var timeLength = DateTime.Now.ToString(_showSeconds ? "HH:mm:ss": "HH:mm").Length;
             _timeLengthInChars = timeLength;
             if (_displayDstIndicator)
                 _timeLengthInChars += 1;
@@ -205,9 +207,12 @@ namespace ScreenSaver
             if (daySuffix.Length != DayIndicatorLength)
                 daySuffix = FixStringLength(daySuffix, DayIndicatorLength);
 
-            var timePart = !_display24HourTime 
-                ? $"{location.CurrentTime:hh:mm} {FormatAmPm(location.CurrentTime)}{dst}" 
-                : $"{location.CurrentTime:HH:mm}{dst}";
+            var timePart = _display24HourTime ?
+                (_showSeconds ? ($"{location.CurrentTime:HH:mm:ss}{dst}") : ($"{location.CurrentTime:HH:mm}{dst}")) :
+                (_showSeconds ?
+                    ($"{location.CurrentTime:h:mm:ss} {FormatAmPm(location.CurrentTime)}{dst}") :
+                    ($"{location.CurrentTime:h:mm} {FormatAmPm(location.CurrentTime)}{dst}"))
+                ;
 
             return String.Format(formatString, timePart) + " " + daySuffix;
         }

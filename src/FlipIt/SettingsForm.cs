@@ -1,17 +1,16 @@
 ﻿/* Originally based on project by Frank McCown in 2010 */
 
+using ScreenSaver.Properties;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
-using System.Reflection;
 using System.Windows.Forms;
-using ScreenSaver.Properties;
 
 namespace ScreenSaver
 {
-	public partial class SettingsForm : Form
+    public partial class SettingsForm : Form
     {
         private readonly FlipItSettings _settings;
         private readonly List<Location> _availableCities = new List<Location>();
