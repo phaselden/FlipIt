@@ -63,14 +63,9 @@ namespace ScreenSaver
 
         private void SettingsForm_Load(object sender, EventArgs e)
         {
-            if (_settings.Display24HrTime)
-            {
-                display24hrRadioButton.Checked = true;
-            }
-            else
-            {
-                display12hrRadioButton.Checked = true;
-            }
+            display24hrRadioButton.Checked = _settings.Display24HrTime;
+            display12hrRadioButton.Checked = !display24hrRadioButton.Checked;
+            chkShowSec.Checked = _settings.ShowSeconds;
 
             showDstIndicatorCheckBox.Checked = _settings.ShowDstIndicator;
             
@@ -159,7 +154,10 @@ namespace ScreenSaver
         {
             _settings.Display24HrTime = true;
         }
-
+        private void chkShowSec_CheckedChanged(object sender, EventArgs e)
+        {
+            _settings.ShowSeconds = chkShowSec.Checked;
+        }
         private void githubLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Process.Start("https://github.com/phaselden/FlipIt");
@@ -429,5 +427,6 @@ namespace ScreenSaver
         {
             _settings.ShowDstIndicator = showDstIndicatorCheckBox.Checked;
         }
+
     }
 }
