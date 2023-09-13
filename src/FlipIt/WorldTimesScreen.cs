@@ -206,7 +206,7 @@ namespace ScreenSaver
                 daySuffix = FixStringLength(daySuffix, DayIndicatorLength);
 
             var timePart = !_display24HourTime 
-                ? $"{location.CurrentTime:h:mm} {FormatAmPm(location.CurrentTime)}{dst}" 
+                ? $"{location.CurrentTime:hh:mm} {FormatAmPm(location.CurrentTime)}{dst}" 
                 : $"{location.CurrentTime:HH:mm}{dst}";
 
             return String.Format(formatString, timePart) + " " + daySuffix;
