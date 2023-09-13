@@ -260,7 +260,7 @@ namespace ScreenSaver
         private void LoadLocationsFromFile()
         {
             var txt = Resources.TimeZoneCities;
-            var lines = txt.Split(new[] {"\r\n"}, StringSplitOptions.None);
+            var lines = txt.Split(new[] { "\r\n", "\n" }, StringSplitOptions.None);
             foreach(var rawLine in lines)
             {
                 var line = rawLine.Trim();
