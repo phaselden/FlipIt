@@ -18,7 +18,7 @@ namespace ScreenSaver
 
         public SettingsForm(FlipItSettings settings)
 		{
-			InitializeComponent();
+            InitializeComponent();
             _settings = settings;
 
             versionLabel.Text = $"Version {GetVersion()}";

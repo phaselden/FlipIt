@@ -65,10 +65,10 @@
             // okButton
             // 
             this.okButton.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.okButton.Location = new System.Drawing.Point(478, 13);
+            this.okButton.Location = new System.Drawing.Point(478, 43);
             this.okButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.okButton.Name = "okButton";
-            this.okButton.Size = new System.Drawing.Size(87, 30);
+            this.okButton.Size = new System.Drawing.Size(93, 35);
             this.okButton.TabIndex = 16;
             this.okButton.Text = "OK";
             this.okButton.UseVisualStyleBackColor = true;
@@ -78,10 +78,10 @@
             // 
             this.cancelButton.CausesValidation = false;
             this.cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.cancelButton.Location = new System.Drawing.Point(478, 51);
+            this.cancelButton.Location = new System.Drawing.Point(478, 86);
             this.cancelButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.cancelButton.Name = "cancelButton";
-            this.cancelButton.Size = new System.Drawing.Size(87, 30);
+            this.cancelButton.Size = new System.Drawing.Size(93, 38);
             this.cancelButton.TabIndex = 17;
             this.cancelButton.Text = "Cancel";
             this.cancelButton.UseVisualStyleBackColor = true;
@@ -259,7 +259,7 @@
             this.addLocationButton.Location = new System.Drawing.Point(478, 497);
             this.addLocationButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.addLocationButton.Name = "addLocationButton";
-            this.addLocationButton.Size = new System.Drawing.Size(87, 30);
+            this.addLocationButton.Size = new System.Drawing.Size(93, 37);
             this.addLocationButton.TabIndex = 14;
             this.addLocationButton.Text = "Add";
             this.addLocationButton.UseVisualStyleBackColor = true;
@@ -268,10 +268,10 @@
             // removeLocationButton
             // 
             this.removeLocationButton.CausesValidation = false;
-            this.removeLocationButton.Location = new System.Drawing.Point(478, 422);
+            this.removeLocationButton.Location = new System.Drawing.Point(478, 435);
             this.removeLocationButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.removeLocationButton.Name = "removeLocationButton";
-            this.removeLocationButton.Size = new System.Drawing.Size(87, 30);
+            this.removeLocationButton.Size = new System.Drawing.Size(93, 34);
             this.removeLocationButton.TabIndex = 12;
             this.removeLocationButton.Text = "Remove";
             this.removeLocationButton.UseVisualStyleBackColor = true;
@@ -280,10 +280,10 @@
             // editLocationButton
             // 
             this.editLocationButton.CausesValidation = false;
-            this.editLocationButton.Location = new System.Drawing.Point(478, 384);
+            this.editLocationButton.Location = new System.Drawing.Point(478, 392);
             this.editLocationButton.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.editLocationButton.Name = "editLocationButton";
-            this.editLocationButton.Size = new System.Drawing.Size(87, 30);
+            this.editLocationButton.Size = new System.Drawing.Size(93, 35);
             this.editLocationButton.TabIndex = 11;
             this.editLocationButton.Text = "Edit";
             this.editLocationButton.UseVisualStyleBackColor = true;
@@ -295,7 +295,7 @@
             this.screensListBox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.screensListBox.FormattingEnabled = true;
             this.screensListBox.ItemHeight = 65;
-            this.screensListBox.Location = new System.Drawing.Point(19, 262);
+            this.screensListBox.Location = new System.Drawing.Point(21, 270);
             this.screensListBox.Name = "screensListBox";
             this.screensListBox.Size = new System.Drawing.Size(85, 264);
             this.screensListBox.TabIndex = 5;
@@ -318,7 +318,7 @@
             // 
             this.versionLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.versionLabel.AutoSize = true;
-            this.versionLabel.Location = new System.Drawing.Point(484, 559);
+            this.versionLabel.Location = new System.Drawing.Point(461, 559);
             this.versionLabel.Name = "versionLabel";
             this.versionLabel.Size = new System.Drawing.Size(121, 28);
             this.versionLabel.TabIndex = 18;
@@ -371,8 +371,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 28F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.CancelButton = this.cancelButton;
-            this.ClientSize = new System.Drawing.Size(577, 604);
+            this.ClientSize = new System.Drawing.Size(603, 604);
             this.Controls.Add(this.chkShowSec);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label6);
