@@ -6,6 +6,7 @@ Flip Clock Screensaver. Inspired by [Fliqlo](http://fliqlo.com/). Fliqlo on Wind
 Improved and fixed some issues:
 * fix the "_showSeconds" option's function and make it configurable.
 * World time cities OK and the hour aligned in WorldTimesScreen.
+* Enable high DPI autoresizing.
 
 ![Screenshot](Screenshot.png)
 
@@ -14,7 +15,7 @@ Improved and fixed some issues:
 ## Requirements
 
 * Microsoft Windows
-* .NET Framework 4.8
+* .NET Framework 4.7.2
 
 ## Installation
 
