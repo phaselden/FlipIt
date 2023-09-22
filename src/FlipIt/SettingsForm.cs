@@ -1,17 +1,16 @@
 ﻿/* Originally based on project by Frank McCown in 2010 */
 
+using ScreenSaver.Properties;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
-using System.Reflection;
 using System.Windows.Forms;
-using ScreenSaver.Properties;
 
 namespace ScreenSaver
 {
-	public partial class SettingsForm : Form
+    public partial class SettingsForm : Form
     {
         private readonly FlipItSettings _settings;
         private readonly List<Location> _availableCities = new List<Location>();
@@ -19,7 +18,7 @@ namespace ScreenSaver
 
         public SettingsForm(FlipItSettings settings)
 		{
-			InitializeComponent();
+            InitializeComponent();
             _settings = settings;
 
             versionLabel.Text = $"Version {GetVersion()}";
@@ -63,14 +62,9 @@ namespace ScreenSaver
 
         private void SettingsForm_Load(object sender, EventArgs e)
         {
-            if (_settings.Display24HrTime)
-            {
-                display24hrRadioButton.Checked = true;
-            }
-            else
-            {
-                display12hrRadioButton.Checked = true;
-            }
+            display24hrRadioButton.Checked = _settings.Display24HrTime;
+            display12hrRadioButton.Checked = !display24hrRadioButton.Checked;
+            chkShowSec.Checked = _settings.ShowSeconds;
 
             showDstIndicatorCheckBox.Checked = _settings.ShowDstIndicator;
             
@@ -159,7 +153,10 @@ namespace ScreenSaver
         {
             _settings.Display24HrTime = true;
         }
-
+        private void chkShowSec_CheckedChanged(object sender, EventArgs e)
+        {
+            _settings.ShowSeconds = chkShowSec.Checked;
+        }
         private void githubLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Process.Start("https://github.com/phaselden/FlipIt");
@@ -262,7 +259,7 @@ namespace ScreenSaver
         private void LoadLocationsFromFile()
         {
             var txt = Resources.TimeZoneCities;
-            var lines = txt.Split(new[] {"\r\n"}, StringSplitOptions.None);
+            var lines = txt.Split(new[] { "\r\n", "\n" }, StringSplitOptions.None);
             foreach(var rawLine in lines)
             {
                 var line = rawLine.Trim();
@@ -429,5 +426,6 @@ namespace ScreenSaver
         {
             _settings.ShowDstIndicator = showDstIndicatorCheckBox.Checked;
         }
+
     }
 }

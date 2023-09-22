@@ -15,6 +15,7 @@ namespace ScreenSaver
 
         public bool Display24HrTime { get; set; }
         public bool ShowDstIndicator { get; set; }
+        public bool ShowSeconds {  get; set; }
         public int Scale { get; set; } = 70;
 
         public List<ScreenSetting> ScreenSettings { get; set; } = new List<ScreenSetting>();
@@ -38,6 +39,7 @@ namespace ScreenSaver
                 settings.Display24HrTime = iniFile.GetBool("General", "Display24Hr", false);
                 settings.ShowDstIndicator = iniFile.GetBool("General", "ShowDstIndicator", true);
                 settings.Scale = iniFile.GetInt("General", "Scale", 70);
+                settings.ShowSeconds = iniFile.GetBool("General", "ShowSeconds", true);
             }
             else
             {
@@ -105,7 +107,7 @@ namespace ScreenSaver
             iniFile.SetBool("General", "Display24Hr", Display24HrTime);
             iniFile.SetBool("General", "ShowDstIndicator", ShowDstIndicator);
             iniFile.SetInt("General", "Scale", Scale);
-
+            iniFile.SetBool("General", "ShowSeconds", ShowSeconds);
             foreach (var screenSetting in ScreenSettings)
             {
                 var screenSectionName = $"Screen {screenSetting.DeviceName}";

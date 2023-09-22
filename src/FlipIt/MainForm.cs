@@ -37,7 +37,7 @@ namespace ScreenSaver
 		// automatically occurs when the form is first shown
 		private Point _mouseLocation;
 		private readonly bool _isPreviewMode;
-		private readonly bool _showSeconds = false;
+		private readonly bool _showSeconds = true;
 		private int _lastMinute = -1;
 
         public MainForm()
@@ -125,20 +125,20 @@ namespace ScreenSaver
 			{
 				if (_timeScreen == null)
                 {
-                    if (_isPreviewMode || _screenSetting.DisplayType == DisplayType.CurrentTime)
-                    {
-                        _timeScreen = new CurrentTimeScreen(this, _settings.Display24HrTime, _isPreviewMode, _settings.Scale);
+					if (_isPreviewMode || _screenSetting.DisplayType == DisplayType.CurrentTime)
+					{
+						_timeScreen = new CurrentTimeScreen(this, _settings.Display24HrTime, _isPreviewMode, _settings.Scale, _settings.ShowSeconds);
 					}
-                    else if (_screenSetting.DisplayType == DisplayType.WorldTime)
-                    {
-                        _timeScreen = _screenSetting.Locations.Count > 0 
-                            ? new WorldTimesScreen(_screenSetting.Locations, this, _settings.Display24HrTime, _settings.ShowDstIndicator) 
-                            : new WorldTimesScreen(GetDefaultLocations(), this, _settings.Display24HrTime, _settings.ShowDstIndicator);
-                    }
-                    else
-                    {
-                        throw new NotImplementedException("Unhandled state: " + _screenSetting.DisplayType);
-                    }
+					else if (_screenSetting.DisplayType == DisplayType.WorldTime)
+					{
+						_timeScreen = _screenSetting.Locations.Count > 0
+							? new WorldTimesScreen(_screenSetting.Locations, this, _settings.Display24HrTime, _settings.ShowDstIndicator, _settings.ShowSeconds)
+							: new WorldTimesScreen(GetDefaultLocations(), this, _settings.Display24HrTime, _settings.ShowDstIndicator, _settings.ShowSeconds);
+					}
+					else
+					{
+						throw new NotImplementedException("Unhandled state: " + _screenSetting.DisplayType);
+					}
                 }
                 _timeScreen.Draw();
 			}
